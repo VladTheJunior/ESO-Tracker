@@ -10,7 +10,7 @@ TCP Tracker for Age of Empires III
 
 [DOWNLOAD ALREADY COMPLIED .EXE](https://github.com/XaKOps/TCP-Tracker/raw/master/TCP%20Tracker.exe)
 
-## How To Compile to .EXE file yourself
+## How To Compile .EXE file yourself
 
 1. Download this repository.
 2. Follow steps from **How To Use**, but instead of install scapy via pip, install latetest dev version via git.
@@ -25,12 +25,6 @@ python setup.py install
 cd path_to_repo
 pyinstaller --onefile tcp.spec
 ```
-
-
-
-
-
-
 
 ![Screenshot](Screenshot.PNG)
 
