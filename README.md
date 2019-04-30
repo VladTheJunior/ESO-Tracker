@@ -12,14 +12,17 @@ TCP Tracker for Age of Empires III
 
 1. Download this repository.
 2. Follow steps from **How To Use**, but instead of install scapy via pip, install latetest dev version via git.
-  git clone https://github.com/secdev/scapy.git
-  cd scapy
-  python setup.py install  
+```
+git clone https://github.com/secdev/scapy.git
+cd scapy
+python setup.py install
+```  
 3. Install pyInstaller via pip.
 4. Run command line and do commands
-  cd path_to_repo
-  pyinstaller --onefile tcp.spec
-
+```
+cd path_to_repo
+pyinstaller --onefile tcp.spec
+```
 # Download already compiled .EXE file for Windows users
 
 
