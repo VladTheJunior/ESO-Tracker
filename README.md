@@ -3,6 +3,10 @@ TCP Tracker for Age of Empires III
 
 [DOWNLOAD ALREADY COMPLIED .EXE](https://github.com/XaKOps/TCP-Tracker/raw/master/TCP%20Tracker.exe)
 
+## How To Use .EXE file
+1. Download and Install [Npcap](https://nmap.org/npcap/) or [WinPcap](https://www.winpcap.org/install/)
+2. Run it!
+
 ## How To Use .py Script
 
 1. Download and Install latest [Python](https://www.python.org/downloads/)
