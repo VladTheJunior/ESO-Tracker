@@ -1,5 +1,6 @@
 import ipaddress
 import json
+import locale
 import os
 import os.path
 import random
@@ -16,7 +17,15 @@ from playsound import playsound
 from scapy.all import sniff
 from scapy.layers.inet import TCP
 
+import localization
+
 init(autoreset=True)
+lang = list(locale.getdefaultlocale())[0][0:2]
+
+if lang == "ru":
+    loc = localization.ru
+else:
+    loc = localization.en
 
 if not os.path.exists("TTS"):
     os.makedirs("TTS")
@@ -103,7 +112,7 @@ def pkt_callback(packet):
                                             )
                                             + " : "
                                             + Fore.MAGENTA
-                                            + f"Player {un} left the chat {cn}"
+                                            + loc["playerleftchat"].format(un=un, cn=cn)
                                         )
                                         return
                                     n = c.attrib["n"]
@@ -112,7 +121,7 @@ def pkt_callback(packet):
                                         + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         + " : "
                                         + Fore.YELLOW
-                                        + f'You left the chat "{n}"'
+                                        + loc["youleftchat"].format(n=n)
                                     )
                                     return
 
@@ -123,15 +132,13 @@ def pkt_callback(packet):
                                         u = c.find("./u")
                                         un = u.attrib["n"]
                                         m = u.find("./m")
-                                        msg = (
-                                            Fore.MAGENTA
-                                            + f'{un} writes to chat "{cn}": {m.text}'
-                                        )
+                                        msg = Fore.MAGENTA + loc[
+                                            "playerwritechat"
+                                        ].format(un=un, cn=cn, m=m.text)
                                     else:
                                         m = c.find("./m")
-                                        msg = (
-                                            Fore.YELLOW
-                                            + f'You write to chat "{cn}": {m.text}'
+                                        msg = Fore.YELLOW + loc["youwritechat"].format(
+                                            cn=cn, m=m.text
                                         )
                                     printWithLog(
                                         Fore.CYAN
@@ -147,7 +154,7 @@ def pkt_callback(packet):
                                         + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         + " : "
                                         + Fore.YELLOW
-                                        + "You updated the chat list."
+                                        + loc["updatedchatlist"]
                                     )
                                     return
                                 # Join to chat
@@ -169,7 +176,7 @@ def pkt_callback(packet):
                                             )
                                             + " : "
                                             + Fore.MAGENTA
-                                            + f'Player {un} joined the chat "{cn}"'
+                                            + loc["playerjoinchat"].format(un=un, cn=cn)
                                         )
                                         return
                                     n = c.attrib["n"]
@@ -193,7 +200,7 @@ def pkt_callback(packet):
                                         + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         + " : "
                                         + Fore.YELLOW
-                                        + f'You joined the chat "{n}"'
+                                        + loc["youjoinchat"].format(n=n)
                                         + "\n"
                                         + "\n".join(messages)
                                     )
@@ -227,7 +234,12 @@ def pkt_callback(packet):
                                         + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         + " : "
                                         + Fore.YELLOW
-                                        + f'Player {un.text} invited you to the lobby "{n.text}": map {s10.text}, players({playerstr})'
+                                        + loc["playerinvite"].format(
+                                            un=un.text,
+                                            n=n.text,
+                                            s10=s10.text,
+                                            playerstr=playerstr,
+                                        )
                                     )
                                     return
                                 # Lobby updated
@@ -253,7 +265,9 @@ def pkt_callback(packet):
                                         + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         + " : "
                                         + Fore.YELLOW
-                                        + f'Lobby "{n.text}" updated: map {s10.text}, players({playerstr})'
+                                        + loc["lobbyupdated"].format(
+                                            n=n.text, s10=s10.text, playerstr=playerstr
+                                        )
                                     )
                                     return
                                 # Remove user
@@ -265,7 +279,7 @@ def pkt_callback(packet):
                                         + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         + " : "
                                         + Fore.YELLOW
-                                        + f"Player {n.text} was removed"
+                                        + loc["playerremoved"].format(n=n.text)
                                     )
                                     return
                                 # Ignore connectusr (it duplicates message)
@@ -284,7 +298,7 @@ def pkt_callback(packet):
                                         + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         + " : "
                                         + Fore.YELLOW
-                                        + "You created a lobby"
+                                        + loc["createlobby"]
                                     )
                                     return
                                 # Remove/ leave/ cancel
@@ -298,7 +312,7 @@ def pkt_callback(packet):
                                         + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         + " : "
                                         + Fore.YELLOW
-                                        + "You left the lobby"
+                                        + loc["youleftlobby"]
                                     )
                                     return
                                 # Someone connecting
@@ -330,11 +344,15 @@ def pkt_callback(packet):
                                                 )
                                                 + " : "
                                                 + Fore.GREEN
-                                                + f"Player {n.text} is connecting: {IP}, {country}"
+                                                + loc["playerconncet"].format(
+                                                    n=n.text, IP=IP, country=country
+                                                )
                                             )
                                             tts = gTTS(
-                                                f"Player {n.text} from {country} is connecting",
-                                                lang="en",
+                                                loc["playerconnectvoice"].format(
+                                                    n=n.text, country=country
+                                                ),
+                                                lang=loc["language"],
                                             )
                                             sound = "".join(
                                                 random.choices(
@@ -358,7 +376,7 @@ def pkt_callback(packet):
                                 + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                 + " : "
                                 + Fore.YELLOW
-                                + f"You started QuickSeatch"
+                                + loc["startqs"]
                             )
                             return
                         # Send invite
@@ -372,7 +390,7 @@ def pkt_callback(packet):
                                 + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                 + " : "
                                 + Fore.YELLOW
-                                + f"You invited {iu.text} to the lobby"
+                                + loc["youinvite"].format(iu=iu.text)
                             )
                             return
                         # Cancel QuickSearch
@@ -385,7 +403,7 @@ def pkt_callback(packet):
                                 + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                 + " : "
                                 + Fore.YELLOW
-                                + f"You canceled QuickSerach"
+                                + loc["cancelqs"]
                             )
                             return
                         # Remove player from list
@@ -401,7 +419,7 @@ def pkt_callback(packet):
                                     + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                     + " : "
                                     + Fore.YELLOW
-                                    + f"You removed player {name.text} from friends/foes list"
+                                    + loc["fflremove"].format(name=name.text)
                                 )
                                 return
                         # Add player to list
@@ -422,7 +440,7 @@ def pkt_callback(packet):
                                             )
                                             + " : "
                                             + Fore.YELLOW
-                                            + f"You added player {n.text} to friends list"
+                                            + loc["fradded"].format(n=n.text)
                                         )
                                     else:
                                         printWithLog(
@@ -432,7 +450,7 @@ def pkt_callback(packet):
                                             )
                                             + " : "
                                             + Fore.YELLOW
-                                            + f"You added player {n.text} to foes list"
+                                            + loc["fadded"].format(n=n.text)
                                         )
                                     return
                         # Update list
@@ -450,7 +468,7 @@ def pkt_callback(packet):
                                         + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         + " : "
                                         + Fore.YELLOW
-                                        + f"You moved player {name.text} to friends list"
+                                        + loc["frmoved"].format(name=name.text)
                                     )
                                 else:
                                     printWithLog(
@@ -458,7 +476,7 @@ def pkt_callback(packet):
                                         + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         + " : "
                                         + Fore.YELLOW
-                                        + f"You moved player {name.text} to foes list"
+                                        + loc["fmoved"].format(name=name.text)
                                     )
                                 return
                         # Player stat
@@ -497,13 +515,28 @@ def pkt_callback(packet):
                                     + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                     + " : "
                                     + Fore.MAGENTA
-                                    + f"Player stat {un.text}\n"
-                                    + f"Registration date: {cd.text}\n"
-                                    + f"Last active: {lld.text}\n"
-                                    + f"Clan {ca.text} - {cn.text}\n"
-                                    + f"Supremacy: games {sg.text}, wins {sw.text}, winrate {sp.text}%, PR {spts.text} \n"
-                                    + f"Treaty: games {tg.text}, wins {tw.text}, winrate {tp.text}%, PR {tpts.text} \n"
-                                    + f"Deathmatch: games {dg.text}, wins {dw.text}, winrate {dp.text}%, PR {dpts.text} \n"
+                                    + loc["stat"].format(un=un.text)
+                                    + loc["regdate"].format(cd=cd.text)
+                                    + loc["lastactive"].format(lld=lld.text)
+                                    + loc["clan"].format(ca=ca.text, cn=cn.text)
+                                    + loc["supremacy"].format(
+                                        sg=sg.text,
+                                        sw=sw.text,
+                                        sp=sp.text,
+                                        spts=spts.text,
+                                    )
+                                    + loc["treaty"].format(
+                                        tg=tg.text,
+                                        tw=tw.text,
+                                        tp=tp.text,
+                                        tpts=tpts.text,
+                                    )
+                                    + loc["dm"].format(
+                                        dg=dg.text,
+                                        dw=dw.text,
+                                        dp=dp.text,
+                                        dpts=dpts.text,
+                                    )
                                 )
                                 return
                         # Whisper to us
@@ -516,9 +549,12 @@ def pkt_callback(packet):
                                 + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                 + " : "
                                 + Fore.GREEN
-                                + f"Player {n.text} whispers : {w.text}"
+                                + loc["playerwhisper"].format(n=n.text, w=w.text)
                             )
-                            tts = gTTS(f"Player {n.text} whispers", lang="en")
+                            tts = gTTS(
+                                loc["playerwhispervoice"].format(n=n.text),
+                                lang=loc["language"],
+                            )
                             sound = "".join(
                                 random.choices(
                                     string.ascii_uppercase + string.digits, k=32
@@ -540,7 +576,9 @@ def pkt_callback(packet):
                                 + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                 + " : "
                                 + Fore.YELLOW
-                                + f"You whisper to {name.text} : {whisper.text}"
+                                + loc["youwhisper"].format(
+                                    name=name.text, whisper=whisper.text
+                                )
                             )
                             return
                         # List of lobbies
@@ -550,7 +588,7 @@ def pkt_callback(packet):
                                 + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                 + " : "
                                 + Fore.YELLOW
-                                + f"You updated list of lobbies"
+                                + loc["listlobbyupdate"]
                             )
                             return
                         # Population ESO
@@ -560,7 +598,7 @@ def pkt_callback(packet):
                                 + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                 + " : "
                                 + Fore.MAGENTA
-                                + f"Players on ESO: {root.find('./numPlayers').text}"
+                                + loc["eso"].format(num=root.find("./numPlayers").text)
                             )
                             return
 
@@ -574,7 +612,7 @@ def pkt_callback(packet):
                                     + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                     + " : "
                                     + Fore.MAGENTA
-                                    + f"QuickSearch updated: {ut.text}"
+                                    + loc["qsupdated"].format(ut=ut.text)
                                 )
                                 return
                             # Friends
@@ -589,14 +627,14 @@ def pkt_callback(packet):
                                         + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         + " : "
                                         + Fore.MAGENTA
-                                        + f"Friend {n.text} left ESO"
+                                        + loc["friendleft"].format(n=n.text)
                                     )
                                     return
                                 if m is not None and gid is not None:
                                     if gid.text == "1":
-                                        gt = "Vanilla"
+                                        gt = loc["Vanilla"]
                                     else:
-                                        gt = "The Asian Dynasties"
+                                        gt = loc["tad"]
                                     if m.text == "IG":
                                         printWithLog(
                                             Fore.CYAN
@@ -605,7 +643,9 @@ def pkt_callback(packet):
                                             )
                                             + " : "
                                             + Fore.MAGENTA
-                                            + f"Friend {n.text} started game in {gt}"
+                                            + loc["friendingame"].format(
+                                                n=n.text, gt=gt
+                                            )
                                         )
                                         return
                                     else:
@@ -616,11 +656,13 @@ def pkt_callback(packet):
                                             )
                                             + " : "
                                             + Fore.GREEN
-                                            + f"Friend {n.text} is online in {gt}"
+                                            + loc["friendonline"].format(
+                                                n=n.text, gt=gt
+                                            )
                                         )
                                         tts = gTTS(
-                                            f"Friend {n.text} is online in {gt}",
-                                            lang="en",
+                                            loc["friendonline"].format(n=n.text, gt=gt),
+                                            lang=loc["language"],
                                         )
                                         sound = "".join(
                                             random.choices(
@@ -657,7 +699,6 @@ if __name__ == "__main__":
     f = open("log.txt", "a+", encoding="utf-8")
     f.seek(0)
     print(f.read())
-
     print(
         Fore.GREEN
         + bordered(
