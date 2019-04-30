@@ -465,7 +465,7 @@ def pkt_callback(packet):
                         if ty == "request" and tp == "metaquery":
                             return
                         if (ty == "response" or ty == "request") and tp == "query":
-                            # Inore request
+                            # Ignore request
                             if ty == "request":
                                 return
                             un = root.find("./un")
@@ -663,7 +663,7 @@ if __name__ == "__main__":
         + bordered(
             [
                 "TCP Tracker for Age of Empires III",
-                "Version 2019.04.27",
+                "Version 2019.04.30",
                 "Copyright (c) 2019 XaKO",
                 "Ready!",
             ]
