@@ -23,7 +23,13 @@ python setup.py install
 cd path_to_repo
 pyinstaller --onefile tcp.spec
 ```
-[Download already compiled .EXE file for Windows users](https://github.com/XaKOps/TCP-Tracker/blob/master/TCP%20Tracker.exe)
+
+
+
+[DOWNLOAD ALREADY COMPLIED .EXE](https://github.com/XaKOps/TCP-Tracker/raw/master/TCP%20Tracker.exe)
+
+
+
 ![Screenshot](Screenshot.PNG)
 
 ## Feautures
