@@ -1,6 +1,6 @@
 en = {
     "language": "en",
-    "country":,"name_en",
+    "country": "name_en",
     "playerleftchat": "Player {un} left the chat {cn}",
     "youleftchat": 'You left the chat "{n}"',
     "playerwritechat": '{un} writes to chat "{cn}": {m}',
@@ -45,7 +45,7 @@ en = {
 
 ru = {
     "language": "ru",
-    "country":,"name_ru",
+    "country": "name_ru",
     "playerleftchat": "Игрок {un} покинул чат {cn}",
     "youleftchat": 'Вы покинули чат "{n}"',
     "playerwritechat": '{un} пишет в чат "{cn}": {m}',
