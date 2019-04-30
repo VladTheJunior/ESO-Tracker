@@ -336,7 +336,7 @@ def pkt_callback(packet):
                                             if IPinfo["country"] is None:
                                                 country = ""
                                             else:
-                                                country = IPinfo["country"]["name_en"]
+                                                country = IPinfo["country"][loc["country"]]
                                             printWithLog(
                                                 Fore.CYAN
                                                 + datetime.now().strftime(
