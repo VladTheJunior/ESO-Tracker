@@ -23,8 +23,8 @@ python setup.py install
 cd path_to_repo
 pyinstaller --onefile tcp.spec
 ```
-# Download already compiled .EXE file for Windows users
-
+[Download already compiled .EXE file for Windows users](/TCP Tracker.exe)
+![GitHub Logo](/screenshot.png)
 
 ## Feautures
 
