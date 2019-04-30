@@ -28,7 +28,7 @@ pyinstaller --onefile tcp.spec
 
 ![Screenshot](Screenshot.PNG)
 
-## Feautures
+## Features
 
 1. Shows all game TCP packets, formats it and saves to log file.
 2. Text to Speech for important events like players connection, whisper and friends online.
