@@ -37,7 +37,7 @@ pyinstaller --onefile tcp.spec
 1. Shows all game TCP packets, formats it and saves to log file.
 2. Text to Speech for important events like players connection, whisper and friends online.
 3. IP Tracker.
-4. You can see and hear who and what whisper while you are ingame (use **/w name message** to answer in game chat).
+4. You can see and hear who whisper while you are ingame (use **/w name message** to answer in game chat).
 5. You can see and hear friends online while you ingame.
 6. Finally you can copy text from chats.
 
