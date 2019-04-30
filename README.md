@@ -8,6 +8,21 @@ TCP Tracker for Age of Empires III
 3. Install all packages via pip (python-dateutil, requests, colorama, gtts, playsound, scapy)
 4. Run it!
 
+## How To Compile to .EXE file yourself
+
+1. Download this repository.
+2. Follow steps from **How To Use**, but instead of install scapy via pip, install latetest dev version via git.
+  git clone https://github.com/secdev/scapy.git
+  cd scapy
+  python setup.py install  
+3. Install pyInstaller via pip.
+4. Run command line and do commands
+  cd path_to_repo
+  pyinstaller --onefile tcp.spec
+
+# Download already compiled .EXE file for Windows users
+
+
 ## Feautures
 
 1. Shows all game TCP packets, formats it and saves to log file.
@@ -42,4 +57,4 @@ TCP Tracker for Age of Empires III
 * Whispers
 * List of lobbies
 * ESO population
-* Frineds onnline/ offline/ ingame
+* Frineds online/ offline/ ingame
