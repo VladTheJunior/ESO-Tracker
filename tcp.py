@@ -1,6 +1,7 @@
 import ipaddress
 import json
 import locale
+import multiprocessing
 import os
 import os.path
 import random
@@ -8,10 +9,12 @@ import string
 import struct
 import xml.etree.ElementTree as ElementTree
 from datetime import datetime, timezone
+from multiprocessing import Process
 
 import requests
 from colorama import Fore, init
 from dateutil.parser import parse
+from googletrans import Translator
 from gtts import gTTS
 from playsound import playsound
 from scapy.all import sniff
@@ -29,6 +32,31 @@ else:
 
 if not os.path.exists("TTS"):
     os.makedirs("TTS")
+
+
+def translateAndSpeech(who, text):
+    # if text language is not native -> translate it
+    translator = Translator()
+    detected_lang = translator.detect(text).lang
+    if detected_lang != lang:
+        text = translator.translate(text, dest=lang).text
+    tts = gTTS(text, lang=lang)
+    sound = "".join(random.choices(string.ascii_uppercase + string.digits, k=32))
+    tts.save(os.path.join("TTS", sound + ".mp3"))
+
+    tts2 = gTTS(who, lang=loc["language"])
+    sound2 = "".join(random.choices(string.ascii_uppercase + string.digits, k=32))
+    tts2.save(os.path.join("TTS", sound2 + ".mp3"))
+
+    playsound(os.path.join("TTS", sound2 + ".mp3"))
+    play_sound(sound)
+
+
+def justSpeech(text):
+    tts = gTTS(text, lang=loc["language"])
+    sound = "".join(random.choices(string.ascii_uppercase + string.digits, k=32))
+    tts.save(os.path.join("TTS", sound + ".mp3"))
+    play_sound(sound)
 
 
 def utc_to_local(utc_dt):
@@ -62,7 +90,7 @@ def getXML(URL, params):
 
 
 def play_sound(sound):
-    playsound(os.path.join("TTS", sound + ".mp3"), False)
+    playsound(os.path.join("TTS", sound + ".mp3"))
 
 
 def pkt_callback(packet):
@@ -336,7 +364,9 @@ def pkt_callback(packet):
                                             if IPinfo["country"] is None:
                                                 country = ""
                                             else:
-                                                country = IPinfo["country"][loc["country"]]
+                                                country = IPinfo["country"][
+                                                    loc["country"]
+                                                ]
                                             printWithLog(
                                                 Fore.CYAN
                                                 + datetime.now().strftime(
@@ -348,23 +378,17 @@ def pkt_callback(packet):
                                                     n=n.text, IP=IP, country=country
                                                 )
                                             )
-                                            tts = gTTS(
-                                                loc["playerconnectvoice"].format(
-                                                    n=n.text, country=country
+                                            P = Process(
+                                                name="justSpeech",
+                                                target=justSpeech,
+                                                args=(
+                                                    loc["playerconnectvoice"].format(
+                                                        n=n.text, country=country
+                                                    ),
                                                 ),
-                                                lang=loc["language"],
                                             )
-                                            sound = "".join(
-                                                random.choices(
-                                                    string.ascii_uppercase
-                                                    + string.digits,
-                                                    k=32,
-                                                )
-                                            )
-                                            tts.save(
-                                                os.path.join("TTS", sound + ".mp3")
-                                            )
-                                            play_sound(sound)
+                                            P.start()
+
                                             return
                         # Start QuickSearch
                         if (ty == "response" or ty == "request") and tp == "begin":
@@ -551,17 +575,17 @@ def pkt_callback(packet):
                                 + Fore.GREEN
                                 + loc["playerwhisper"].format(n=n.text, w=w.text)
                             )
-                            tts = gTTS(
-                                loc["playerwhispervoice"].format(n=n.text),
-                                lang=loc["language"],
+
+                            P = Process(
+                                name="translateAndSpeech",
+                                target=translateAndSpeech,
+                                args=(
+                                    loc["playerwhispervoice"].format(n=n.text),
+                                    w.text,
+                                ),
                             )
-                            sound = "".join(
-                                random.choices(
-                                    string.ascii_uppercase + string.digits, k=32
-                                )
-                            )
-                            tts.save(os.path.join("TTS", sound + ".mp3"))
-                            play_sound(sound)
+                            P.start()
+
                             return
 
                         # we whisper
@@ -660,18 +684,16 @@ def pkt_callback(packet):
                                                 n=n.text, gt=gt
                                             )
                                         )
-                                        tts = gTTS(
-                                            loc["friendonline"].format(n=n.text, gt=gt),
-                                            lang=loc["language"],
+                                        P = Process(
+                                            name="justSpeech",
+                                            target=justSpeech,
+                                            args=(
+                                                loc["friendonline"].format(
+                                                    n=n.text, gt=gt
+                                                ),
+                                            ),
                                         )
-                                        sound = "".join(
-                                            random.choices(
-                                                string.ascii_uppercase + string.digits,
-                                                k=32,
-                                            )
-                                        )
-                                        tts.save(os.path.join("TTS", sound + ".mp3"))
-                                        play_sound(sound)
+                                        P.start()
 
                                         return
                                 else:
@@ -696,6 +718,7 @@ def pkt_callback(packet):
 
 
 if __name__ == "__main__":
+    multiprocessing.freeze_support()
     f = open("log.txt", "a+", encoding="utf-8")
     f.seek(0)
     print(f.read())

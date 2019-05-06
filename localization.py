@@ -14,7 +14,7 @@ en = {
     "createlobby": "You created a lobby",
     "youleftlobby": "You left the lobby",
     "playerconncet": "Player {n} is connecting: {IP}, {country}",
-    "playerconnectvoice": "Player {n.text} from {country} is connecting",
+    "playerconnectvoice": "Player {n} from {country} is connecting",
     "startqs": "You started QuickSeatch",
     "youinvite": "You invited {iu} to the lobby",
     "cancelqs": "You canceled QuickSerach",
