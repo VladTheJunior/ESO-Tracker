@@ -1,5 +1,5 @@
 # TCP-Tracker
-TCP Tracker for Age of Empires III
+TCP (and part of UDP) Tracker for Age of Empires III
 
 ## How To Use .EXE file
 1. [DOWNLOAD ALREADY COMPLIED .EXE](https://github.com/XaKOps/TCP-Tracker/raw/master/TCP%20Tracker.exe)
@@ -39,7 +39,8 @@ pyinstaller --onefile tcp.spec
 3. IP Tracker.
 4. You can see and hear who whisper while you are ingame (use **/w name message** to answer in game chat).
 5. You can see and hear friends online while you ingame.
-6. Finally you can copy text from chats.
+6. You can see and hear lobby chat and taunts.
+7. Finally you can copy text from chats.
 
 ## List of All Formatted Events
 ### Chats
