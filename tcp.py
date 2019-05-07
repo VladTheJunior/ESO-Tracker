@@ -143,6 +143,10 @@ def pkt_callback(packet):
                     and data[10] == 0x03
                 ):
                     text = data[14:-9].decode("UTF-16be")
+                    if text.find("/--flare ") == 0:
+                        return
+
+
                     if ipaddress.ip_address(srcIP).is_private:
                         if text.find("/--taunt ") != 0:
                             printWithLog(
