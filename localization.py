@@ -41,6 +41,10 @@ en = {
     "tad": "The Asian Dynasties",
     "friendingame": "Friend {n} started game in {gt}",
     "friendonline": "Friend {n} is online in {gt}",
+    "yousay":"You write to {dst}: {text}",
+    "yousaytaunt":"You say taunt to {dst}: {text}",
+    "playersay":"Player {src} writes: {text}",
+    "playersaytaunt":"Player {src} says taunt: {text}",
 }
 
 ru = {
@@ -86,4 +90,8 @@ ru = {
     "tad": "Династиях",
     "friendingame": "Друг {n} начал игру в {gt}",
     "friendonline": "Друг {n} в сети в {gt}",
+    "yousay":"Вы пишите {dst}: {text}",
+    "yousaytaunt":"Вы произносите насмешку для {dst}: {text}",
+    "playersay":"Игрок {src} пишет: {text}",
+    "playersaytaunt":"Игрок {src} произносит насмешку: {text}",
 }
