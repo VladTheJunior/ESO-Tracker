@@ -48,41 +48,50 @@ def playTaunt(name):
 
 
 def translateAndSpeech(who, text):
-    # if text language is not native -> translate it
-    translator = Translator()
-    detected_lang = translator.detect(text).lang
-    if detected_lang != lang:
-        text = translator.translate(text, dest=lang).text
-    tts = gTTS(text, lang=lang)
-    sound = "".join(random.choices(string.ascii_uppercase + string.digits, k=32))
-    tts.save(os.path.join("TTS", sound + ".mp3"))
+    try:
+        # if text language is not native -> translate it
+        translator = Translator()
+        detected_lang = translator.detect(text).lang
+        if detected_lang != lang:
+            text = translator.translate(text, dest=lang).text
+        tts = gTTS(text, lang=lang)
+        sound = "".join(random.choices(string.ascii_uppercase + string.digits, k=32))
+        tts.save(os.path.join("TTS", sound + ".mp3"))
 
-    tts2 = gTTS(who, lang=loc["language"])
-    sound2 = "".join(random.choices(string.ascii_uppercase + string.digits, k=32))
-    tts2.save(os.path.join("TTS", sound2 + ".mp3"))
+        tts2 = gTTS(who, lang=loc["language"])
+        sound2 = "".join(random.choices(string.ascii_uppercase + string.digits, k=32))
+        tts2.save(os.path.join("TTS", sound2 + ".mp3"))
 
-    play_sound(sound2)
-    play_sound(sound)
+        play_sound(sound2)
+        play_sound(sound)
+    except:
+        pass
 
 
 def translateAndSpeech2(text):
-    # if text language is not native -> translate it
-    translator = Translator()
-    detected_lang = translator.detect(text).lang
-    if detected_lang != lang:
-        text = translator.translate(text, dest=lang).text
-    tts = gTTS(text, lang=lang)
-    sound = "".join(random.choices(string.ascii_uppercase + string.digits, k=32))
-    tts.save(os.path.join("TTS", sound + ".mp3"))
+    try:
+        # if text language is not native -> translate it
+        translator = Translator()
+        detected_lang = translator.detect(text).lang
+        if detected_lang != lang:
+            text = translator.translate(text, dest=lang).text
+        tts = gTTS(text, lang=lang)
+        sound = "".join(random.choices(string.ascii_uppercase + string.digits, k=32))
+        tts.save(os.path.join("TTS", sound + ".mp3"))
 
-    play_sound(sound)
+        play_sound(sound)
+    except:
+        pass
 
 
 def justSpeech(text):
-    tts = gTTS(text, lang=loc["language"])
-    sound = "".join(random.choices(string.ascii_uppercase + string.digits, k=32))
-    tts.save(os.path.join("TTS", sound + ".mp3"))
-    play_sound(sound)
+    try:
+        tts = gTTS(text, lang=loc["language"])
+        sound = "".join(random.choices(string.ascii_uppercase + string.digits, k=32))
+        tts.save(os.path.join("TTS", sound + ".mp3"))
+        play_sound(sound)
+    except:
+        pass
 
 
 def utc_to_local(utc_dt):
@@ -129,7 +138,7 @@ def find_between(s, first, last):
 
 
 def pkt_callback(packet):
-    
+
     if packet.haslayer(UDP):
         srcIP = packet[IP].src
         dstIP = packet[IP].dst
@@ -142,10 +151,10 @@ def pkt_callback(packet):
                     and data[9] == 0x01
                     and data[10] == 0x03
                 ):
-                    text = data[14:-9].decode("UTF-16be")
+
+                    text = data[15:-8].decode("UTF-16le")
                     if text.find("/--flare ") == 0:
                         return
-
 
                     if ipaddress.ip_address(srcIP).is_private:
                         if text.find("/--taunt ") != 0:
@@ -933,7 +942,7 @@ if __name__ == "__main__":
         + bordered(
             [
                 "TCP Tracker for Age of Empires III",
-                "Version 2019.05.07",
+                "Version 2019.05.08",
                 "Copyright (c) 2019 XaKO",
                 "Ready!",
             ]
