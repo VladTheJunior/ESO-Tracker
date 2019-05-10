@@ -20,9 +20,9 @@ from gtts import gTTS
 from playsound import playsound
 from scapy.all import sniff
 from scapy.layers.inet import IP, TCP, UDP
-
+import pkgutil
 import localization
-
+import sys
 
 def getGamePath():
     try:
@@ -47,8 +47,21 @@ def playTaunt(name):
             pass
 
 
+def getSoundsPath():
+    if getattr(sys, 'frozen', False):
+        # we are running in a bundle
+        return os.path.join(sys._MEIPASS,"sound")
+    else:
+        # we are running in a normal Python environment
+        return os.path.dirname(os.path.abspath(__file__))
+
+
+
 def translateAndSpeech(who, text):
     try:
+        # notif sound
+        soundPath = getSoundsPath()
+        playsound(os.path.join(soundPath, "message.mp3"))
         # if text language is not native -> translate it
         translator = Translator()
         detected_lang = translator.detect(text).lang
@@ -70,6 +83,9 @@ def translateAndSpeech(who, text):
 
 def translateAndSpeech2(text):
     try:
+        # notif sound
+        soundPath = getSoundsPath()
+        playsound(os.path.join(soundPath, "message.mp3"))        
         # if text language is not native -> translate it
         translator = Translator()
         detected_lang = translator.detect(text).lang
@@ -86,6 +102,9 @@ def translateAndSpeech2(text):
 
 def justSpeech(text):
     try:
+        # notif sound
+        soundPath = getSoundsPath()
+        playsound(os.path.join(soundPath, "connect.mp3"))        
         tts = gTTS(text, lang=loc["language"])
         sound = "".join(random.choices(string.ascii_uppercase + string.digits, k=32))
         tts.save(os.path.join("TTS", sound + ".mp3"))
@@ -942,7 +961,7 @@ if __name__ == "__main__":
         + bordered(
             [
                 "TCP Tracker for Age of Empires III",
-                "Version 2019.05.08",
+                "Version 2019.05.10",
                 "Copyright (c) 2019 XaKO",
                 "Ready!",
             ]

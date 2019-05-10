@@ -5,7 +5,7 @@ block_cipher = None
 
 a = Analysis(['tcp.py'],
              binaries=[],
-             datas=[],
+             datas=[('message.mp3', 'sound'), ('connect.mp3','sound')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
