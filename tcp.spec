@@ -3,9 +3,9 @@
 block_cipher = None
 
 
-a = Analysis(['tcp.py'],
+a = Analysis(['gui.py'],
              binaries=[],
-             datas=[('message.mp3', 'sound'), ('connect.mp3','sound')],
+             datas=[('message.mp3', 'sound'), ('connect.mp3','sound'), ('icon.ico','.')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -22,12 +22,12 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='TCP Tracker',
+          name='ESO Packet Tracker',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=False,
           runtime_tmpdir=None,
-          console=True,
+          console=False,
 icon='icon.ico',
 version='file_version_info.txt' )
