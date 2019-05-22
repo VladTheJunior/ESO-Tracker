@@ -1,4 +1,4 @@
-# TCP-Tracker
+# ESO Packet Tracker
 TCP (and part of UDP) Tracker for Age of Empires III
 
 [![HitCount](http://hits.dwyl.io/XaKOps/TCP-Tracker.svg)](http://hits.dwyl.io/XaKOps/TCP-Tracker)
@@ -16,7 +16,7 @@ Npcap is the exciting and feature-packed update to the venerable WinPcap packet 
 
 1. Download and Install latest [Python](https://www.python.org/downloads/)
 2. Download and Install [Npcap](https://nmap.org/npcap/) or [WinPcap](https://www.winpcap.org/install/)
-3. Install all packages via pip (python-dateutil, requests, colorama, gtts, playsound, scapy)
+3. Install all packages via pip (python-dateutil, requests, pyqt5, gtts, googletrans, playsound, scapy)
 4. Run it!
 
 
@@ -33,7 +33,7 @@ python setup.py install
 4. Run command line and do commands
 ```
 cd path_to_repo
-pyinstaller --onefile tcp.spec
+pyinstaller --onefile app.spec
 ```
 
 ![Screenshot](Screenshot.PNG)
@@ -41,12 +41,15 @@ pyinstaller --onefile tcp.spec
 ## Features
 
 1. Shows all game TCP packets, formats it and saves to log file.
-2. Text to Speech for important events like players connection, whisper and friends online.
-3. IP Tracker.
-4. You can see and hear who whisper while you are ingame (use **/w name message** to answer in game chat).
-5. You can see and hear friends online while you ingame.
-6. You can see and hear lobby chat and taunts.
-7. Finally you can copy text from chats.
+2. Text to Speech for important events like players connection, whisper and friends online notification.
+3. Auto translate feature (translate messages to your system language).
+4. IP Tracker.
+5. IP and ESO database (stores localy on your PC).
+6. Ping utility (you can see latency in milliseconds).
+7. You can see and hear who whisper while you are ingame (use **/w name message** to answer in game chat).
+8. You can see and hear friends online while you ingame.
+9. You can see and hear lobby chat and taunts.
+10. Finally you can copy text from chats.
 
 ## List of All Formatted Events
 ### Chats
