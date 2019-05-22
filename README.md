@@ -21,7 +21,7 @@ TCP (and part of UDP) Tracker for Age of Empires III
 9. You can see and hear friends online while you ingame.
 10. You can see and hear lobby chat and taunts.
 11. Finally you can copy text from chats.
-12. App support Russian and English localiztion.
+12. App supports Russian and English localiztion.
 
 ## How To Use .EXE file
 1. [DOWNLOAD ALREADY COMPLIED .EXE](https://drive.google.com/open?id=1qLZ2Y4SGoVV40bl6d1wSEJmf3asukGhw)
