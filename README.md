@@ -3,6 +3,23 @@ TCP (and part of UDP) Tracker for Age of Empires III
 
 [![HitCount](http://hits.dwyl.io/XaKOps/TCP-Tracker.svg)](http://hits.dwyl.io/XaKOps/TCP-Tracker)
 
+
+![Screenshot](Screenshots/1.png)
+
+## Features
+
+1. Shows all game TCP packets, formats it and saves to log file.
+2. Text to Speech for important events like players connection, whisper and friends online notification.
+3. Auto translate feature (translate messages to your system language).
+4. IP Tracker.
+5. IP and ESO database (stores localy on your PC).
+6. Ping utility (you can see latency in milliseconds).
+7. You can see and hear who whisper while you are ingame (use **/w name message** to answer in game chat).
+8. You can see and hear friends online while you ingame.
+9. You can see and hear lobby chat and taunts.
+10. Finally you can copy text from chats.
+11. App support Russian and English localiztion.
+
 ## How To Use .EXE file
 1. [DOWNLOAD ALREADY COMPLIED .EXE](https://github.com/XaKOps/TCP-Tracker/raw/master/TCP%20Tracker.exe)
 2. Download and Install [Npcap](https://nmap.org/npcap/) or [WinPcap](https://www.winpcap.org/install/)
@@ -36,20 +53,6 @@ cd path_to_repo
 pyinstaller --onefile app.spec
 ```
 
-![Screenshot](Screenshots/1.png)
-
-## Features
-
-1. Shows all game TCP packets, formats it and saves to log file.
-2. Text to Speech for important events like players connection, whisper and friends online notification.
-3. Auto translate feature (translate messages to your system language).
-4. IP Tracker.
-5. IP and ESO database (stores localy on your PC).
-6. Ping utility (you can see latency in milliseconds).
-7. You can see and hear who whisper while you are ingame (use **/w name message** to answer in game chat).
-8. You can see and hear friends online while you ingame.
-9. You can see and hear lobby chat and taunts.
-10. Finally you can copy text from chats.
 
 ## List of All Formatted Events
 ### Chats
