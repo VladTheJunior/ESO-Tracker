@@ -9,16 +9,17 @@ TCP (and part of UDP) Tracker for Age of Empires III
 ## Features
 
 1. Shows all game TCP packets, formats it and saves to log file.
-2. Text to Speech for important events like players connection, whisper and friends online notification.
+2. Text to Speech for important events like players connection, whisper and friends online notification (convenient when game is minimized).
 3. Auto translate feature (translate messages to your system language).
-4. IP Tracker.
-5. IP and ESO database (stores localy on your PC).
-6. Ping utility (you can see latency in milliseconds).
-7. You can see and hear who whisper while you are ingame (use **/w name message** to answer in game chat).
-8. You can see and hear friends online while you ingame.
-9. You can see and hear lobby chat and taunts.
-10. Finally you can copy text from chats.
-11. App support Russian and English localiztion.
+4. IP Tracker (IP and Country).
+5. You can check player name in QuickSearch (only if you are host)
+6. IP and ESO database (stores localy on your PC).
+7. Ping utility (you can see latency in milliseconds).
+8. You can see and hear who whisper while you are ingame (use **/w name message** to answer in game chat).
+9. You can see and hear friends online while you ingame.
+10. You can see and hear lobby chat and taunts.
+11. Finally you can copy text from chats.
+12. App support Russian and English localiztion.
 
 ## How To Use .EXE file
 1. [DOWNLOAD ALREADY COMPLIED .EXE](https://github.com/XaKOps/TCP-Tracker/raw/master/TCP%20Tracker.exe)
