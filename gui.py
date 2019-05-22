@@ -5,6 +5,7 @@ import os
 import os.path
 import pkgutil
 import random
+import socket
 import string
 import struct
 import sys
@@ -16,30 +17,12 @@ import requests
 from dateutil.parser import parse
 from googletrans import Translator
 from gtts import gTTS
-from PyQt5.QtCore import (
-    QObject,
-    QRunnable,
-    Qt,
-    QThread,
-    QThreadPool,
-    QTimer,
-    pyqtSignal,
-)
+from PyQt5.QtCore import (QObject, QRunnable, QSettings, Qt, QThread,
+                          QThreadPool, QTimer, pyqtSignal)
 from PyQt5.QtGui import QColor, QFont, QIcon
-from PyQt5.QtWidgets import (
-    QApplication,
-    QCheckBox,
-    QDesktopWidget,
-    QGridLayout,
-    QHBoxLayout,
-    QLabel,
-    QLayout,
-    QLineEdit,
-    QListWidget,
-    QListWidgetItem,
-    QWidget,
-    QGroupBox,
-)
+from PyQt5.QtWidgets import (QApplication, QCheckBox, QDesktopWidget,
+                             QGridLayout, QGroupBox, QLabel, QLineEdit,
+                             QListWidget, QListWidgetItem, QWidget)
 from scapy.all import sniff, traceroute
 from scapy.layers.inet import IP, TCP, UDP
 
@@ -64,7 +47,7 @@ class pingIP(QRunnable):
         self.signals = LobbySignals()
 
     def run(self):
-        result, _ = traceroute(self.ip)
+        result, _ = traceroute(self.ip, verbose=False)
 
         # r = [(snd, recv) for snd, recv in result if snd.dst == self.ip]
         maxttl = max(result, key=lambda x: x[0].ttl)[0].ttl
@@ -74,9 +57,6 @@ class pingIP(QRunnable):
                 "IP": stat[0][0].dst,
                 "RTT": f"{round(1000*(stat[0][1].time - stat[0][0].sent_time))} ms",
             }
-        )
-        print(
-            f"IP: {stat[0][0].dst} ttl: {stat[0][0].ttl} rtt: {round(1000*(stat[0][1].time - stat[0][0].sent_time))}"
         )
 
 
@@ -111,7 +91,7 @@ class justSpeech(QRunnable):
 
             playsound(os.path.join("TTS", sound + ".mp3"))
         except Exception as e:
-            print(e)
+            pass
 
 
 class translateAndSpeech2(QRunnable):
@@ -151,7 +131,7 @@ class translateAndSpeech2(QRunnable):
 
             playsound(os.path.join("TTS", sound + ".mp3"))
         except Exception as e:
-            print(e)
+            pass
 
 
 class translateAndSpeech(QRunnable):
@@ -200,7 +180,7 @@ class translateAndSpeech(QRunnable):
             playsound(os.path.join("TTS", sound + ".mp3"))
 
         except Exception as e:
-            print(e)
+            pass
 
 
 class SniffThread(QThread):
@@ -245,11 +225,6 @@ class SniffThread(QThread):
     def utc_to_local(self, utc_dt):
         return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
-    def printWithLog(self, msg):
-        print(msg, flush=True)
-        with open("log.txt", "a+", encoding="utf-8") as f:
-            print(msg, file=f, flush=True)
-
     def ColoredOutput(self, text, cType):
         dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if cType == 0:
@@ -286,7 +261,15 @@ class SniffThread(QThread):
             dstIP = packet[IP].dst
             data = bytes(packet[UDP].payload)
             try:
-                if srcIP != "168.61.152.225" and dstIP != "168.61.152.225":
+                # Ignore agecommunity.com and ep.eso-community.net
+                agecomIP = socket.gethostbyname("agecommunity.com")
+                epIP = socket.gethostbyname("ep.eso-community.net")
+                if (
+                    srcIP != agecomIP
+                    and dstIP != agecomIP
+                    and srcIP != epIP
+                    and dstIP != epIP
+                ):
 
                     # Get IP of connected player
                     if not ipaddress.ip_address(srcIP).is_private:
@@ -294,7 +277,7 @@ class SniffThread(QThread):
 
                     if not ipaddress.ip_address(dstIP).is_private:
                         self.activeIP.emit(dstIP)
-                ############################
+                    ############################
                 if len(data) > 0:
                     if (
                         data[0] == 0x03
@@ -1017,9 +1000,13 @@ class SniffThread(QThread):
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
+        self.lang = list(locale.getdefaultlocale())[0][0:2]
 
+        if self.lang == "ru":
+            self.loc = localization.ru
+        else:
+            self.loc = localization.en
         self.initUI()
-
 
     def getIconPath(self):
         if getattr(sys, "frozen", False):
@@ -1027,7 +1014,7 @@ class MainWindow(QWidget):
             return os.path.join(sys._MEIPASS, "icon.ico")
         else:
             # we are running in a normal Python environment
-            return os.path.dirname(os.path.abspath(__file__))
+            return os.path.join(os.path.dirname(os.path.abspath(__file__)), "icon.ico")
 
     def initUI(self):
         self.jsonPackets = []
@@ -1049,40 +1036,47 @@ class MainWindow(QWidget):
         self.IPandNames.setFont(QFont("Consolas", 11, weight=QFont.Bold))
         grid.addWidget(self.IPandNames, 1, 2)
 
-        l = QLabel("ESO Packets:")
+        l = QLabel(self.loc["plogs"])
         grid.addWidget(l, 0, 0)
 
-        l2 = QLabel("Players in lobby:")
+        l2 = QLabel(self.loc["playersinlobby"])
         grid.addWidget(l2, 0, 1)
 
-        l3 = QLabel("IP and ESO names database:")
+        l3 = QLabel(self.loc["ipandeso"])
         grid.addWidget(l3, 0, 2)
 
-        self.groupBox = QGroupBox("Filter:")
+        self.groupBox = QGroupBox(self.loc["filter"])
         gridBox = QGridLayout()
 
-        self.cb1 = QCheckBox("Show BLACK messages")
-        self.cb1.setChecked(True)
+        settings = QSettings("XaKOps", "ESO Packet Tracker")
+        cs1 = settings.value("box1", True, type=bool)
+        cs2 = settings.value("box2", True, type=bool)
+        cs3 = settings.value("box3", True, type=bool)
+        cs4 = settings.value("box4", True, type=bool)
+        cs5 = settings.value("box5", True, type=bool)
+
+        self.cb1 = QCheckBox(self.loc["black"])
+        self.cb1.setChecked(cs1)
         self.cb1.clicked.connect(self.filterClicked)
         gridBox.addWidget(self.cb1, 1, 0)
 
-        self.cb2 = QCheckBox("Show VIOLET messages")
-        self.cb2.setChecked(True)
+        self.cb2 = QCheckBox(self.loc["violet"])
+        self.cb2.setChecked(cs2)
         self.cb2.clicked.connect(self.filterClicked)
         gridBox.addWidget(self.cb2, 1, 1)
 
-        self.cb3 = QCheckBox("Show BLUE messages")
-        self.cb3.setChecked(True)
+        self.cb3 = QCheckBox(self.loc["blue"])
+        self.cb3.setChecked(cs3)
         self.cb3.clicked.connect(self.filterClicked)
         gridBox.addWidget(self.cb3, 1, 2)
 
-        self.cb4 = QCheckBox("Show GREEN messages")
-        self.cb4.setChecked(True)
+        self.cb4 = QCheckBox(self.loc["green"])
+        self.cb4.setChecked(cs4)
         self.cb4.clicked.connect(self.filterClicked)
         gridBox.addWidget(self.cb4, 1, 3)
 
-        self.cb5 = QCheckBox("Show RED messages")
-        self.cb5.setChecked(True)
+        self.cb5 = QCheckBox(self.loc["red"])
+        self.cb5.setChecked(cs5)
         self.cb5.clicked.connect(self.filterClicked)
         gridBox.addWidget(self.cb5, 1, 4)
 
@@ -1093,7 +1087,7 @@ class MainWindow(QWidget):
         self.groupBox.setLayout(gridBox)
         grid.addWidget(self.groupBox, 2, 0)
 
-        self.groupBox2 = QGroupBox("Filter:")
+        self.groupBox2 = QGroupBox(self.loc["filter"])
         gridBox2 = QGridLayout()
 
         self.filterIP = QLineEdit(self)
@@ -1107,7 +1101,7 @@ class MainWindow(QWidget):
         self.timer = QTimer()
         self.timer.timeout.connect(self.UpdateLobby)
         self.timer.setSingleShot(False)
-        self.timer.start(500)
+        self.timer.start(100)
 
         self.jsonPackets = self.openJSONPackets("log.json")
         self.jsonIPandNames = self.openJSONIPandNames("IPandNames.json")
@@ -1131,6 +1125,12 @@ class MainWindow(QWidget):
         self.move(qr.topLeft())
 
     def filterClicked(self):
+        settings = QSettings("XaKOps", "ESO Packet Tracker")
+        settings.setValue("box1", self.cb1.isChecked())
+        settings.setValue("box2", self.cb2.isChecked())
+        settings.setValue("box3", self.cb3.isChecked())
+        settings.setValue("box4", self.cb4.isChecked())
+        settings.setValue("box5", self.cb5.isChecked())
         for row in range(self.w.count()):
             a = self.w.item(row)
             filterMatching = (
@@ -1216,7 +1216,7 @@ class MainWindow(QWidget):
         self.IPinLobby = [
             IP
             for IP in self.IPinLobby
-            if (datetime.now() - IP["LastUpdate"]).total_seconds() < 5
+            if (datetime.now() - IP["LastUpdate"]).total_seconds() < 3
         ]
         widgetItems = []
         for i in self.IPinLobby:
@@ -1244,6 +1244,17 @@ class MainWindow(QWidget):
                 self.w.addItems(widgetItems)
                 for i in range(self.w.count()):
                     item = self.w.item(i)
+                    if QColor(j[i]["color"]) == QColor(clBlack):
+                        item.setHidden(not (self.cb1.isChecked()))
+                    if QColor(j[i]["color"]) == QColor(clViolet):
+                        item.setHidden(not (self.cb2.isChecked()))
+                    if QColor(j[i]["color"]) == QColor(clBlue):
+                        item.setHidden(not (self.cb3.isChecked()))
+                    if QColor(j[i]["color"]) == QColor(clGreen):
+                        item.setHidden(not (self.cb4.isChecked()))
+                    if QColor(j[i]["color"]) == QColor(clRed):
+                        item.setHidden(not (self.cb5.isChecked()))
+
                     item.setForeground(QColor(j[i]["color"]))
                 self.w.scrollToBottom()
                 return j
@@ -1268,6 +1279,7 @@ class MainWindow(QWidget):
 
 
 if __name__ == "__main__":
+    sys.stdout = open("stdout.txt", "a+")
     app = QApplication(sys.argv)
     mw = MainWindow()
     sys.exit(app.exec_())
