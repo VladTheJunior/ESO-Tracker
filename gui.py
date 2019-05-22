@@ -191,6 +191,10 @@ class SniffThread(QThread):
     def __init__(self):
         super().__init__()
         self.pool = QThreadPool()
+        self.agecomIP = socket.gethostbyname("agecommunity.com")
+        self.conagecomIP = socket.gethostbyname("connection.agecommunity.com")
+        self.epIP = socket.gethostbyname("ep.eso-community.net")
+        
 
     def getGamePath(self):
         try:
@@ -262,13 +266,14 @@ class SniffThread(QThread):
             data = bytes(packet[UDP].payload)
             try:
                 # Ignore agecommunity.com and ep.eso-community.net
-                agecomIP = socket.gethostbyname("agecommunity.com")
-                epIP = socket.gethostbyname("ep.eso-community.net")
+
                 if (
-                    srcIP != agecomIP
-                    and dstIP != agecomIP
-                    and srcIP != epIP
-                    and dstIP != epIP
+                    srcIP != self.agecomIP
+                    and dstIP != self.agecomIP
+                    and srcIP != self.conagecomIP
+                    and dstIP != self.conagecomIP
+                    and srcIP != self.epIP
+                    and dstIP != self.epIP
                 ):
 
                     # Get IP of connected player
