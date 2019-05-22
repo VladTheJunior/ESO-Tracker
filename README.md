@@ -36,7 +36,7 @@ cd path_to_repo
 pyinstaller --onefile app.spec
 ```
 
-![Screenshot](Screenshot.PNG)
+![Screenshot](Screenshots/1.PNG)
 
 ## Features
 
