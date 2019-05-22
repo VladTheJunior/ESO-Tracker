@@ -15,7 +15,7 @@ TCP (and part of UDP) Tracker for Age of Empires III
 3. Auto translate feature (translate messages to your system language).
 4. IP Tracker (IP and Country).
 5. You can check player name in QuickSearch (only if you are host).
-6. IP and ESO database (stores localy on your PC).
+6. IP and ESO database (stores locally on your PC).
 7. Ping utility (you can see latency in milliseconds).
 8. You can see and hear who whisper while you are ingame (use **/w name message** to answer in game chat).
 9. You can see and hear friends online while you ingame.
