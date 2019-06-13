@@ -1,0 +1,5 @@
+clBlack = "#e5e5e5"
+clViolet = "#B44DD8"
+clBlue = "#56A7E2"
+clGreen = "#18AD11"
+clRed = "#D84D4D"
