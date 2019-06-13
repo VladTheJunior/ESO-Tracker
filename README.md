@@ -1,7 +1,10 @@
 # ESO Packet Tracker
 TCP (and part of UDP) Tracker for Age of Empires III
 
-[DOWNLOAD ALREADY COMPLIED .EXE](https://drive.google.com/open?id=1YEtSgtNHe_PDnVfYDe91vFQ6COhrJHEz)
+For those who do not want to download all dependencies:
+
+[DOWNLOAD INSTALLER - just install and that's all](https://drive.google.com/open?id=1D2AtuM1CVLW3Wo4S7jlMuw8AGjmMh2xx)
+
 
 [![HitCount](http://hits.dwyl.io/XaKOps/TCP-Tracker.svg)](http://hits.dwyl.io/XaKOps/TCP-Tracker)
 
@@ -26,6 +29,10 @@ TCP (and part of UDP) Tracker for Age of Empires III
 ## How To Use .EXE file
 1. [DOWNLOAD ALREADY COMPLIED .EXE](https://drive.google.com/open?id=1YEtSgtNHe_PDnVfYDe91vFQ6COhrJHEz)
 2. Download and Install [Npcap](https://nmap.org/npcap/) or [WinPcap](https://www.winpcap.org/install/)
+
+OR
+
+Just download INSTALLER instead of steps 1-2 [DOWNLOAD INSTALLER - just install and that's all](https://drive.google.com/open?id=1D2AtuM1CVLW3Wo4S7jlMuw8AGjmMh2xx)
 
 *WinPcap has been the de facto standard library for packet capture and link-layer packet injection for over a decade. Many open source and commercial network tools use WinPcap for network access and filtering, but it has been unmaintained since 2013 and is no longer supported.
 Npcap is the exciting and feature-packed update to the venerable WinPcap packet capture library. Building on the successful WinPcap legacy, Npcap brings increased speed, security, and Windows 10 support. All of WinPcap's packet capture and injection features are included, with a few great additions like raw 802.11 frame capture.*
