@@ -1,68 +1,63 @@
-# ESO Packet Tracker
-TCP (and part of UDP) Tracker for Age of Empires III
+# ESO Tracker
+It is a unility for **TRACKING** network **PACKETS** (TCP and UDP), **IP CHECKING** and **PARSING RECORDS** in Age of Empires III. The scope is quite wide: you can troll your mates, catch annoying smurfs or cheaters and analyse games. Convinient filters show only the information you want to see. App supports both Russian and English localization. View list of all [features](##Features).
 
-For those who do not want to download all dependencies:
+## Download
 
-[DOWNLOAD INSTALLER - just install and that's all](https://drive.google.com/open?id=1D2AtuM1CVLW3Wo4S7jlMuw8AGjmMh2xx)
+[DOWNLOAD INSTALLER](https://drive.google.com/open?id=1D2AtuM1CVLW3Wo4S7jlMuw8AGjmMh2xx)
+
+
+If you don't trust installer then you can [compile .EXE file yourself](##How-To-Compile-.EXE-file-yourself). 
 
 
 [![HitCount](http://hits.dwyl.io/XaKOps/TCP-Tracker.svg)](http://hits.dwyl.io/XaKOps/TCP-Tracker)
 
+## Screenshots
 
 ![Screenshot](Screenshots/1.png)
 
 ## Features
 
-1. Shows all game TCP packets, formats it and saves to log file.
+1. [Packets Tracker](###Packets-Tracker)
+2. [IP Checker](###IP-Checker)
+3. [Records Parser](###Records-Parser)
+
+### Packets Tracker
+1. Shows all game TCP packets, formats it and saves to log file. View full [list of formatted events](##List of All Formatted Events).
 2. Text to Speech for important events like players connection, whisper and friends online notification (convenient when game is minimized).
 3. Auto translate feature (translate messages to your system language).
-4. IP Tracker (IP and Country).
-5. You can check player name in QuickSearch (only if you are host).
-6. IP and ESO database (stores locally on your PC).
-7. Ping utility (you can see latency in milliseconds).
-8. You can see and hear who whisper while you are ingame (use **/w name message** to answer in game chat).
-9. You can see and hear friends online while you ingame.
-10. You can see and hear lobby chat and taunts.
-11. Finally you can copy text from chats.
-12. App supports Russian and English localiztion.
+4. You can check player name in QuickSearch (only if you are host).
+5. You can see and hear who whisper while you are ingame (use **/w name message** to answer in game chat).
+6. You can see and hear friends online while you ingame.
+7. You can see and hear lobby chat and taunts.
+8. Finally you can copy text from chats.
 
-## How To Use .EXE file
-1. [DOWNLOAD ALREADY COMPLIED .EXE](https://drive.google.com/open?id=1YEtSgtNHe_PDnVfYDe91vFQ6COhrJHEz)
-2. Download and Install [Npcap](https://nmap.org/npcap/) or [WinPcap](https://www.winpcap.org/install/)
+### IP Checker
+1. Simple IP geolocation shows country, city and flag.
+2. IP and ESO names database (stores locally on your PC).
+3. Ping utility (you can see latency in milliseconds).
 
-OR
-
-Just download INSTALLER instead of steps 1-2 [DOWNLOAD INSTALLER - just install and that's all](https://drive.google.com/open?id=1D2AtuM1CVLW3Wo4S7jlMuw8AGjmMh2xx)
-
-*WinPcap has been the de facto standard library for packet capture and link-layer packet injection for over a decade. Many open source and commercial network tools use WinPcap for network access and filtering, but it has been unmaintained since 2013 and is no longer supported.
-Npcap is the exciting and feature-packed update to the venerable WinPcap packet capture library. Building on the successful WinPcap legacy, Npcap brings increased speed, security, and Windows 10 support. All of WinPcap's packet capture and injection features are included, with a few great additions like raw 802.11 frame capture.*
-
-3. Run it!
-
-## How To Use .py Script
-
-1. Download and Install latest [Python](https://www.python.org/downloads/)
-2. Download and Install [Npcap](https://nmap.org/npcap/) or [WinPcap](https://www.winpcap.org/install/)
-3. Install all packages via pip (python-dateutil, requests, pyqt5, gtts, googletrans, playsound, scapy)
-4. Run it!
-
+### Records Parser
+1. Shows general info about recorded game (title, map name, map icon, game mode, game version, game duration, players names, civs, PR and APM).
+2. Shows selected decks.
+3. Shows list of all important game actions(train units, build, shipment, spawn unit, research tech, selected deck, resigned, cheat tech) with timestamp.
 
 ## How To Compile .EXE file yourself
 
-1. Download this repository.
-2. Follow steps from **How To Use**, but instead of install scapy via pip, install latetest dev version via git.
+1. Download and Install latest [Python](https://www.python.org/downloads/)
+2. Download and Install [Npcap](https://nmap.org/npcap/) or [WinPcap](https://www.winpcap.org/install/)
+3. Install packages via pip (python-dateutil, requests, pyqt5, gtts, googletrans, playsound, pyInstaller)
+4. Install latetest dev version of scapy via git:
 ```
 git clone https://github.com/secdev/scapy.git
 cd scapy
 python setup.py install
 ```  
-3. Install pyInstaller via pip.
-4. Run command line and do commands
+5. Download this repository.
+6. Run command line and do commands^
 ```
 cd path_to_repo
 pyinstaller --onefile app.spec
 ```
-
 
 ## List of All Formatted Events
 ### Chats
@@ -89,4 +84,4 @@ pyinstaller --onefile app.spec
 * Whispers
 * List of lobbies
 * ESO population
-* Frineds online/ offline/ ingame
+* Friends online/ offline/ ingame
