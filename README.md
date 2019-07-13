@@ -13,7 +13,7 @@ If you don't trust installer then you can [compile .EXE file yourself](#How-To-C
 
 ## Screenshots
 
-![Screenshot](Screenshots/1.png)
+![Screenshot](Screenshots/2.png)
 
 ## Features
 
