@@ -12,7 +12,7 @@ If you don't trust installer then you can [compile .EXE file yourself](#How-To-C
 [![HitCount](http://hits.dwyl.io/XaKOps/ESO-Tracker.svg)](http://hits.dwyl.io/XaKOps/ESO-Tracker)
 
 ## Screenshots
-![Screenshot](Screenshots/1.PNG#)
+![Screenshot](Screenshots/1.PNG)
 ![Screenshot](Screenshots/2.PNG)
 ![Screenshot](Screenshots/3.PNG)
 ![Screenshot](Screenshots/4.PNG)
