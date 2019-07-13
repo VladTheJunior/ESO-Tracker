@@ -12,8 +12,11 @@ If you don't trust installer then you can [compile .EXE file yourself](#How-To-C
 [![HitCount](http://hits.dwyl.io/XaKOps/TCP-Tracker.svg)](http://hits.dwyl.io/XaKOps/TCP-Tracker)
 
 ## Screenshots
-
+![Screenshot](Screenshots/1.png)
 ![Screenshot](Screenshots/2.PNG)
+![Screenshot](Screenshots/3.PNG)
+![Screenshot](Screenshots/4.PNG)
+![Screenshot](Screenshots/5.PNG)
 
 ## Features
 
