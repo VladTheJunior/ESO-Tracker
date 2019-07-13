@@ -1,12 +1,12 @@
 # ESO Tracker
-It is a unility for **TRACKING** network **PACKETS** (TCP and UDP), **IP CHECKING** and **PARSING RECORDS** in Age of Empires III. The scope is quite wide: you can troll your mates, catch annoying smurfs or cheaters and analyse games. Convinient filters show only the information you want to see. App supports both Russian and English localization. View list of all [features](##Features).
+It is a unility for **TRACKING** network **PACKETS** (TCP and UDP), **IP CHECKING** and **PARSING RECORDS** in Age of Empires III. The scope is quite wide: you can troll your mates, catch annoying smurfs or cheaters and analyse games. Convinient filters show only the information you want to see. App supports both Russian and English localization. View list of all [features](#Features).
 
 ## Download
 
-[DOWNLOAD INSTALLER](https://drive.google.com/open?id=1D2AtuM1CVLW3Wo4S7jlMuw8AGjmMh2xx)
+[DOWNLOAD INSTALLER](https://drive.google.com/open?id=1EskTX8MirfWu2oTKtltgoXdze4EXlzM0)
 
 
-If you don't trust installer then you can [compile .EXE file yourself](##How-To-Compile-.EXE-file-yourself). 
+If you don't trust installer then you can [compile .EXE file yourself](#How-To-Compile-.EXE-file-yourself). 
 
 
 [![HitCount](http://hits.dwyl.io/XaKOps/TCP-Tracker.svg)](http://hits.dwyl.io/XaKOps/TCP-Tracker)
@@ -17,12 +17,12 @@ If you don't trust installer then you can [compile .EXE file yourself](##How-To-
 
 ## Features
 
-1. [Packets Tracker](###Packets-Tracker)
-2. [IP Checker](###IP-Checker)
-3. [Records Parser](###Records-Parser)
+1. [Packets Tracker](#Packets-Tracker)
+2. [IP Checker](#IP-Checker)
+3. [Records Parser](#Records-Parser)
 
 ### Packets Tracker
-1. Shows all game TCP packets, formats it and saves to log file. View full [list of formatted events](##List of All Formatted Events).
+1. Shows all game TCP packets, formats it and saves to log file. View full [list of formatted events](#List of All Formatted Events).
 2. Text to Speech for important events like players connection, whisper and friends online notification (convenient when game is minimized).
 3. Auto translate feature (translate messages to your system language).
 4. You can check player name in QuickSearch (only if you are host).
