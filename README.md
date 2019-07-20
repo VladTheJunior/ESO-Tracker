@@ -25,7 +25,7 @@ If you don't trust installer then you can [compile .EXE file yourself](#How-To-C
 3. [Records Parser](#Records-Parser)
 
 ### Packets Tracker
-1. Shows all game TCP packets, formats it and saves to log file. View full [list of formatted events](#List of All Formatted Events).
+1. Shows all game TCP packets, formats it and saves to log file. View full [list of formatted events](#List-of-All-Formatted-Events).
 2. Text to Speech for important events like players connection, whisper and friends online notification (convenient when game is minimized).
 3. Auto translate feature (translate messages to your system language).
 4. You can check player name in QuickSearch (only if you are host).
