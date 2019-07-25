@@ -35,9 +35,10 @@ If you don't trust installer then you can [compile .EXE file yourself](#How-To-C
 8. Finally you can copy text from chats.
 
 ### IP Checker
-1. Simple IP geolocation shows country, city and flag.
+1. Simple IP geolocation shows ISP, timezone, country, city and flag.
 2. IP and ESO names database (stores locally on your PC).
 3. Ping utility (you can see latency in milliseconds).
+4. VPN check.
 
 ### Records Parser
 1. Shows general info about recorded game (title, map name, map icon, game mode, game version, game duration, players names, civs, PR and APM).
