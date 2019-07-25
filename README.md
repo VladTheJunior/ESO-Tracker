@@ -3,7 +3,7 @@ It is a utility for **TRACKING** network **PACKETS** (TCP and UDP), **IP CHECKIN
 
 ## Download
 
-[DOWNLOAD INSTALLER](https://drive.google.com/open?id=1EskTX8MirfWu2oTKtltgoXdze4EXlzM0)
+[DOWNLOAD INSTALLER](https://drive.google.com/open?id=1wbO4_ZMrV-nxhpos04Z3OzIByp_trhbv)
 
 
 If you don't trust installer then you can [compile .EXE file yourself](#How-To-Compile-.EXE-file-yourself). 
@@ -17,6 +17,7 @@ If you don't trust installer then you can [compile .EXE file yourself](#How-To-C
 ![Screenshot](Screenshots/3.PNG)
 ![Screenshot](Screenshots/4.PNG)
 ![Screenshot](Screenshots/5.PNG)
+![Screenshot](Screenshots/6.PNG)
 
 ## Features
 
