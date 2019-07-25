@@ -15,12 +15,7 @@ class IPInfo(QRunnable):
         super().__init__()
         self.ip = ip
         self.ESO = name
-        self.lang = list(locale.getdefaultlocale())[0][0:2]
         self.signals = IPSignals()
-        if self.lang == "ru":
-            self.loc = localization.ru
-        else:
-            self.loc = localization.en
 
     def getJSON(self, URL, params=None):
         r = requests.get(URL, params=params, timeout=10)
@@ -28,29 +23,31 @@ class IPInfo(QRunnable):
 
     def run(self):
         try:
-            info = self.getJSON("http://api.sypexgeo.net/json/" + self.ip)
-            if info["country"] is None or info["country"][self.loc["country"]] == "":
-                country = self.loc["unknown"]
-                flag = b""
-            else:
-                country = info["country"][self.loc["country"]]
-                flag = (
-                    requests.get("https://www.countryflags.io/" + info["country"]["iso"] + "/flat/16.png").content
-                    
+            info = self.getJSON("https://www.ipqualityscore.com/api/json/ip/AGb3QZuZgJ9Z6l5n00Eym9k9VMKS2ETi/"+self.ip+ "?strictness=1&allow_public_access_points=true")
+            if info["success"]:
+                if info["country_code"] == "-":
+                    flag = b""
+                else:
+                    flag = (
+                        requests.get("https://www.countryflags.io/" + info["country_code"] + "/flat/16.png").content
+                        
+                    )
+                country = info["country_code"]
+                city = info["city"]
+                timezone = info["timezone"]
+                fraud_score = info["proxy"]
+                ISP = info["ISP"]
+                self.signals.infoSignal.emit(
+                    {
+                        "IP": str(self.ip),
+                        "Country": country,
+                        "City": city,
+                        "ISP": ISP,
+                        "timezone": timezone,
+                        "fraud_score": fraud_score,
+                        "Flag": base64.encodestring(flag).decode('ascii'),
+                        "Name": self.ESO,
+                    }
                 )
-
-            if info["city"] is None or info["city"][self.loc["country"]] == "":
-                city = self.loc["unknown"]
-            else:
-                city = info["city"][self.loc["country"]]
-            self.signals.infoSignal.emit(
-                {
-                    "IP": str(self.ip),
-                    "Country": country,
-                    "City": city,
-                    "Flag": base64.encodestring(flag).decode('ascii'),
-                    "Name": self.ESO,
-                }
-            )
         except:
             pass

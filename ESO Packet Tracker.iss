@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
  
 #define MyAppName "ESO Packet Tracker"
-#define MyAppVersion "13.07.19"
+#define MyAppVersion "25.07.19"
 #define MyAppPublisher "XaKO"
 #define MyAppExeName "ESO Tracker.exe"
 

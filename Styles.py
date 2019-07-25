@@ -146,6 +146,17 @@ QScrollBar:horizontal {{
      border-image: url("{path}Visuals/Buttons/CloseNormal.png") no-repeat;
 }}
 
+ QPushButton#Add {{
+     border-image: url("{path}Visuals/Buttons/AddNormal.png") no-repeat;
+}}
+
+ QPushButton#Add:hover {{
+     border-image: url("{path}Visuals/Buttons/AddActive.png") no-repeat;
+}}
+ QPushButton#Add:pressed {{
+     border-image: url("{path}Visuals/Buttons/AddClicked.png") no-repeat;
+}}
+
  QPushButton#MenuItem {{
      font: 500 22px Monotype Corsiva;
      color:#e5e5e5;
@@ -154,6 +165,8 @@ QScrollBar:horizontal {{
      padding-right:6px;
      border-image: url("{path}Visuals/Buttons/MenuNormal.png") no-repeat;
 }}
+
+
 
  QPushButton#MenuItem:checked {{
      border-image: url("{path}Visuals/Buttons/MenuActive.png") no-repeat;
@@ -270,6 +283,13 @@ QWidget#TitleBkg{{
  QWidget#MenuContent {{
      background-image: url("{path}Visuals/Backgrounds/Paper.png") repeat;
 
+}}
+
+QToolTip {{
+    font: 16px formal436 BT;
+    color: #e5e5e5;
+    background-color: #000000;
+    border: 2px solid #FFD700;
 }}
 
 QCheckBox#standardCheckBoxW{{

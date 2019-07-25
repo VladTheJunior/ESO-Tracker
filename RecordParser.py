@@ -115,9 +115,10 @@ class RecordParser:
             self.Data = self.Data[17:]
             if self.Data[0] != 1:
                 raise Exception("Not a multiplayer game")
-            self.SkipBytes(12)
+            self.SkipBytes(13)
+            #print(self.Data[self.Offset - 12:self.Offset+12])
             self.Game["view_point"] = self.ReadInt8()
-            self.SkipBytes(237)
+            self.SkipBytes(236)
             self.ReadExeInfo()
             self.SkipBytes(8)
             self.SkipString()
@@ -236,7 +237,7 @@ class RecordParser:
                             break
                         if not matches2[1] in self.Players:
                             self.Players[matches2[1]] = {"actions": [], "decks": [
-                            ], "is_resigned": False, "selectedDeckId": -1}
+                            ], "is_resigned": 0, "selectedDeckId": -1}
                         self.Players[matches2[1]][matches2[2]] = value
                 else:
                     self.Game[matches[1]] = value
@@ -344,8 +345,9 @@ class RecordParser:
             for _ in range(0, selectedCount):
                 selectedIds.append(self.ReadInt32())
             self.ExpectedInt8(0)
-            self.Players[str(ord(self.Game["view_point"]))]["actions"].append({"pid": str(ord(self.Game["view_point"])), "duration":
-                                                                               self.Game["duration"], "type": "selected", "ids": selectedIds})
+            action = {"pid": str(ord(self.Game["view_point"])), "duration": self.Game["duration"], "type": "selected", "ids": selectedIds}
+            #if action not in self.Players[str(ord(self.Game["view_point"]))]["actions"]:
+            #    self.Players[str(ord(self.Game["view_point"]))]["actions"].append(action)
         else:
             if not self.Search(
                     b"\x01\x00\x00\x00\x00\x00\x00\x00\x00\x19", True, False, False
@@ -531,13 +533,15 @@ class RecordParser:
                         if unknown2 == 0:
                             objectId = self.ReadInt32()
                             self.SkipBytes(16)
-                            self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                            action = {"pid": str(playerId), "duration":
                                                                            self.Game["duration"], "type": "action",
                                                                            "id": unknownList[0],
                                                                            "unknown": unknownList[2],
                                                                            "object_id": objectId,
                                                                            "selected": selectedIds,
-                                                                           })
+                                                                           }
+                            #if action not in self.Players[str(playerId)]["actions"]:                                               
+                            self.Players[str(playerId)]["actions"].append(action)
                         elif unknown2 == 1:
                             self.SkipBytes(8)
                             self.ExpectedInt8(0)
@@ -552,12 +556,14 @@ class RecordParser:
                             self.ExpectedInt8(0)
                             self.ExpectedInt8(128)
                             self.ExpectedInt8(191)
-                            self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                            action = {"pid": str(playerId), "duration":
                                                                            self.Game["duration"], "type": "way_point",
                                                                            "id": unknownList[0],
                                                                            "unknown": unknownList[2],
                                                                            "selected": selectedIds,
-                                                                           })
+                                                                           }
+                            #if action not in self.Players[str(playerId)]["actions"]:
+                            self.Players[str(playerId)]["actions"].append(action)
                         else:
                             self.SkipBytes(4)
                             self.ExpectedInt32(0)
@@ -602,12 +608,14 @@ class RecordParser:
                             else:
                                 techName = {
                                     "ru": "неизвестно", "en": "unknown"}
-                        self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                        action = {"pid": str(playerId), "duration":
                                                                        self.Game["duration"], "type": "research_tech1",
                                                                        "id": techId,
                                                                        "techName": techName,
                                                                        "selected": selectedIds,
-                                                                       })
+                                                                       }
+                        #if action not in self.Players[str(playerId)]["actions"]:
+                        self.Players[str(playerId)]["actions"].append(action)
                     elif commandId == 2:
                         self.ExpectedValue(0, unknown2)
                         self.ExpectedValue(4, unknownCount)
@@ -640,13 +648,16 @@ class RecordParser:
                                 else:
                                     unitName = {
                                         "ru": "неизвестно", "en": "unknown"}
-                            self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                            action = {"pid": str(playerId), "duration":
                                                                            self.Game["duration"], "type": "train",
                                                                            "id": unitId,
                                                                            "unitName": unitName,
                                                                            "amount": ord(amount),
                                                                            "selected": selectedIds,
-                                                                           })
+                                                                           }
+                            #print("shipment" + str(unitId))
+                            #if action not in self.Players[str(playerId)]["actions"]:
+                            self.Players[str(playerId)]["actions"].append(action)
                         elif unknown1 == 2:
                             self.ExpectedValue(unitId, -1)
                             self.ExpectedValue(amount, 1)
@@ -672,13 +683,16 @@ class RecordParser:
                                     else:
                                         shipmentName = {
                                             "ru": str(shipmentId), "en": str(shipmentId)}
-                            self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                            action = {"pid": str(playerId), "duration":
                                                                            self.Game["duration"],
                                                                            "type": "shipment",
                                                                            "shipmentName": shipmentName,
                                                                            "id": shipmentId,
                                                                            "selected": selectedIds,
-                                                                           })
+                                                                           }
+                            #if action not in self.Players[str(playerId)]["actions"]:
+                            #print("shipment" + str(shipmentId))
+                            self.Players[str(playerId)]["actions"].append(action)
                         else:
                             raise Exception(f"Unknown1: {unknown1}")
                     elif commandId == 3:
@@ -710,8 +724,10 @@ class RecordParser:
                             else:
                                 unitName = {
                                     "ru": "неизвестно", "en": "unknown"}
-                        self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
-                                                                       self.Game["duration"], "type": "build", "id": buildId, "unitName": unitName, "selected": selectedIds})
+                        action = {"pid": str(playerId), "duration":
+                                                                       self.Game["duration"], "type": "build", "id": buildId, "unitName": unitName, "selected": selectedIds}
+                        #if action not in self.Players[str(playerId)]["actions"]:
+                        self.Players[str(playerId)]["actions"].append(action)
                     elif commandId == 4:
                         self.ExpectedValue(0, unknown2)
                         self.ExpectedValue(2, unknownCount)
@@ -746,12 +762,14 @@ class RecordParser:
                             Type = "special_power"
                         else:
                             raise Exception(f"Unknown1: {unknown1}")
-                        self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                        action = {"pid": str(playerId), "duration":
                                                                        self.Game["duration"], "type": Type,
                                                                        "id": powerId,
                                                                        "object_id": objectId,
                                                                        "selected": selectedIds,
-                                                                       })
+                                                                       }
+                        #if action not in self.Players[str(playerId)]["actions"]:
+                        self.Players[str(playerId)]["actions"].append(action)
                     elif commandId == 13:
                         self.ExpectedValue(3, unknown1)
                         self.ExpectedValue(1, selectedCount)
@@ -763,6 +781,7 @@ class RecordParser:
                         self.SkipBytes(4)
                     elif commandId == 14:  # cancel queue of shipment
                         self.ExpectedValue(4, unknownCount)
+                        #print(self.Data[self.Offset:self.Offset+32])
                     elif commandId == 16:
                         self.ExpectedValue(3, unknown1)
                         self.ExpectedValue(0, selectedCount)
@@ -771,9 +790,11 @@ class RecordParser:
                         self.SkipBytes(4)
                         self.ExpectedInt32(playerId)
                         self.SkipBytes(4)
-                        self.Players[str(playerId)]["is_resigned"] = True
-                        self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
-                                                                       self.Game["duration"], "type": "resigned"})
+                        self.Players[str(playerId)]["is_resigned"] += 1
+                        action = {"pid": str(playerId), "duration":
+                                                                       self.Game["duration"], "type": "resigned"}
+                        #if action not in self.Players[str(playerId)]["actions"]:
+                        self.Players[str(playerId)]["actions"].append(action)
 
                     elif commandId == 18:
                         self.ExpectedValue(0, unknown1)
@@ -811,11 +832,13 @@ class RecordParser:
                         withPlayerId = self.ReadInt8()
                         diplomacy = self.ReadInt8()
                         self.SkipBytes(2)
-                        self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                        action = {"pid": str(playerId), "duration":
                                                                        self.Game["duration"], "type": "diplomacy",
                                                                        "id": ord(diplomacy),
                                                                        "player_id": ord(withPlayerId),
-                                                                       })
+                                                                       }
+                        #if action not in self.Players[str(playerId)]["actions"]:
+                        self.Players[str(playerId)]["actions"].append(action)
                     elif commandId == 34:
                         self.ExpectedValue(0, unknown1)
                         self.ExpectedValue(0, unknown2)
@@ -868,11 +891,13 @@ class RecordParser:
                             else:
                                 self.SkipBytes(12)
                             if control2 == 1:
-                                self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                                action = {"pid": str(playerId), "duration":
                                                                                self.Game["duration"], "type": "allies_request",
                                                                                "request": "flare",
                                                                                "players": selectedIds,
-                                                                               })
+                                                                               }
+                                #if action not in self.Players[str(playerId)]["actions"]:
+                                self.Players[str(playerId)]["actions"].append(action)
                             elif control2 == 3:
                                 if unknown3 == 0:
                                     resource = "gold"
@@ -882,13 +907,15 @@ class RecordParser:
                                     resource = "food"
                                 else:
                                     raise Exception(f"unknown3: {unknown3}")
-                                self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                                action = {"pid": str(playerId), "duration":
                                                                                self.Game["duration"],
                                                                                "type": "allies_request",
                                                                                "request": "send",
                                                                                "resource": resource,
                                                                                "players": selectedIds,
-                                                                               })
+                                                                               }
+                                #if action not in self.Players[str(playerId)]["actions"]:
+                                self.Players[str(playerId)]["actions"].append(action)
                             elif control2 == 4:
                                 if unknown3 == 0:
                                     resource = "gold"
@@ -898,18 +925,22 @@ class RecordParser:
                                     resource = "food"
                                 else:
                                     raise Exception(f"unknown3: {unknown3}")
-                                self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                                action = {"pid": str(playerId), "duration":
                                                                                self.Game["duration"], "type": "allies_request",
                                                                                "request": "overtime",
                                                                                "resource": resource,
                                                                                "players": selectedIds,
-                                                                               })
+                                                                               }
+                                #if action not in self.Players[str(playerId)]["actions"]:
+                                self.Players[str(playerId)]["actions"].append(action)
                             elif control2 == 5:
-                                self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                                action = {"pid": str(playerId), "duration":
                                                                                self.Game["duration"], "type": "allies_request",
                                                                                "request": "stop",
                                                                                "players": selectedIds,
-                                                                               })
+                                                                               }
+                                #if action not in self.Players[str(playerId)]["actions"]:
+                                self.Players[str(playerId)]["actions"].append(action)
                             elif control2 == 7:
                                 if unknown3 == 1482:
                                     unit = "infantry"
@@ -919,12 +950,14 @@ class RecordParser:
                                     unit = "artillery"
                                 else:
                                     raise Exception(f"unknown3: {unknown3}")
-                                self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                                action = {"pid": str(playerId), "duration":
                                                                                self.Game["duration"], "type": "allies_request",
                                                                                "request": "build",
                                                                                "unit": unit,
                                                                                "players": selectedIds,
-                                                                               })
+                                                                               }
+                                #if action not in self.Players[str(playerId)]["actions"]:
+                                self.Players[str(playerId)]["actions"].append(action)
                             elif control2 == 8:
                                 if unknown3 == 1:
                                     action = "aggressivity"
@@ -934,12 +967,14 @@ class RecordParser:
                                     action = "defensive"
                                 else:
                                     raise Exception(f"unknown3: {unknown3}")
-                                self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                                action = {"pid": str(playerId), "duration":
                                                                                self.Game["duration"], "type": "allies_request",
                                                                                "request": "start",
                                                                                "action": action,
                                                                                "players": selectedIds,
-                                                                               })
+                                                                               }
+                                #if action not in self.Players[str(playerId)]["actions"]: 
+                                self.Players[str(playerId)]["actions"].append(action)
                             else:
                                 break
 
@@ -962,6 +997,7 @@ class RecordParser:
                         self.ExpectedValue(0, unknown2)
                         self.ExpectedValue(2, unknownCount)
                         self.SkipBytes(8)
+                        #print(self.Data[self.Offset:self.Offset+4])
                     elif commandId == 48:
                         self.ExpectedValue(3, unknown1)
                         self.ExpectedValue(0, selectedCount)
@@ -980,12 +1016,14 @@ class RecordParser:
                         objectId = self.ReadInt32()
                         self.SkipBytes(4)
                         resource = self.ReadInt32()
-                        self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                        action = {"pid": str(playerId), "duration":
                                                                        self.Game["duration"], "type": "change_trade_route_resource",
                                                                        "object_id": objectId,
                                                                        "resource": resource,
                                                                        "selected": selectedIds,
-                                                                       })
+                                                                       }
+                        #if action not in self.Players[str(playerId)]["actions"]:
+                        self.Players[str(playerId)]["actions"].append(action)
                     elif commandId == 58:
                         self.ExpectedValue(3, unknown1)
                         self.ExpectedValue(0, selectedCount)
@@ -997,11 +1035,13 @@ class RecordParser:
                         self.ExpectedValue(0, unknown2)
                         self.ExpectedValue(2, unknownCount)
                         objectId = self.ReadInt32()
-                        self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                        action = {"pid": str(playerId), "duration":
                                                                        self.Game["duration"], "type": "shipments_way_point",
                                                                        "object_id": objectId,
                                                                        "selected": selectedIds,
-                                                                       })
+                                                                       }
+                        #if action not in self.Players[str(playerId)]["actions"]:
+                        self.Players[str(playerId)]["actions"].append(action)
                     elif commandId == 62:
                         self.ExpectedValue(0, unknown1)
                         self.ExpectedValue(0, unknown2)
@@ -1035,14 +1075,16 @@ class RecordParser:
                             else:
                                 unitName = {
                                     "ru": "неизвестно", "en": "unknown"}
-                        self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
+                        action = {"pid": str(playerId), "duration":
                                                                        self.Game["duration"], "type": "spawn_unit",
                                                                        "id": unitId,
                                                                        "unitName": unitName,
                                                                        "object_id": objectId,
                                                                        "amount": amount,
                                                                        "selected": selectedIds,
-                                                                       })
+                                                                       }
+                        #if action not in self.Players[str(playerId)]["actions"]:
+                        self.Players[str(playerId)]["actions"].append(action)
                     elif commandId == 64:
                         self.ExpectedValue(3, unknown1)
                         self.ExpectedValue(0, selectedCount)
@@ -1079,8 +1121,10 @@ class RecordParser:
                             else:
                                 techName = {
                                     "ru": "неизвестно", "en": "unknown"}
-                        self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
-                                                                       self.Game["duration"], "type": Type, "techName": techName, "id": techId, "selected": selectedIds})
+                        action = {"pid": str(playerId), "duration":
+                                                                       self.Game["duration"], "type": Type, "techName": techName, "id": techId, "selected": selectedIds}
+                        #if action not in self.Players[str(playerId)]["actions"]:
+                        self.Players[str(playerId)]["actions"].append(action)
                     elif commandId == 66:
                         self.ExpectedValue(2, unknown1)
                         self.ExpectedValue(1, selectedCount)
@@ -1090,8 +1134,10 @@ class RecordParser:
                         deckId = self.ReadInt32()
                         self.SkipBytes(4)
                         self.Players[str(playerId)]["selectedDeckId"] = deckId
-                        self.Players[str(playerId)]["actions"].append({"pid": str(playerId), "duration":
-                                                                       self.Game["duration"], "type": "pick_deck", "deckName": self.Players[str(playerId)]["decks"][deckId]["name"],  "id": deckId, "selected": selectedIds})
+                        action = {"pid": str(playerId), "duration":
+                                                                       self.Game["duration"], "type": "pick_deck", "deckName": self.Players[str(playerId)]["decks"][deckId]["name"],  "id": deckId, "selected": selectedIds}
+                        #if action not in self.Players[str(playerId)]["actions"]:
+                        self.Players[str(playerId)]["actions"].append(action)
                     elif commandId == 67:
                         self.ExpectedValue(3, unknown1)
                         self.ExpectedValue(0, selectedCount)
@@ -1106,8 +1152,10 @@ class RecordParser:
                     selectedIds = []
                     for _ in range(0, selectedCount):
                         selectedIds.append(self.ReadInt32())
-                    self.Players[str(ord(self.Game["view_point"]))]["actions"].append({"pid": str(ord(self.Game["view_point"])), "duration":
-                                                                                       self.Game["duration"], "type": "selected", "ids": selectedIds})
+                    action = {"pid": str(ord(self.Game["view_point"])), "duration":
+                                                                                       self.Game["duration"], "type": "selected", "ids": selectedIds}
+                    #if action not in self.Players[str(ord(self.Game["view_point"]))]["actions"]:                                                        
+                    #    self.Players[str(ord(self.Game["view_point"]))]["actions"].append(action)
             try:
                 resignCount = ord(self.ReadInt8())
             except:
