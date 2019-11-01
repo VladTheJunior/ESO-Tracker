@@ -1,68 +1,39 @@
+import ctypes.wintypes
+import ipaddress
 import json
+import locale
 import os
 import os.path
 import pkgutil
 import sys
-import ipaddress
-import locale
-import ctypes.wintypes
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
+
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QSize, QRegExp
-from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtCore import (
-    QObject,
-    QPoint,
-    QRunnable,
-    QSettings,
-    Qt,
-    QThread,
-    QThreadPool,
-    QTimer,
-    pyqtSignal,
-)
-from PyQt5.QtGui import QColor, QFont, QIcon, QImage, QPixmap
+from PyQt5.QtCore import (QObject, QPoint, QRegExp, QRunnable, QSettings,
+                          QSize, Qt, QThread, QThreadPool, QTimer, pyqtSignal)
+from PyQt5.QtGui import QColor, QFont, QIcon, QImage, QPixmap, QRegExpValidator
 from PyQt5.QtWidgets import (
-    QAbstractItemView,
-    QSizePolicy,
-    QListView,
-    QApplication,
-    QCheckBox,
-    QDesktopWidget,
-    QGridLayout,
-    QVBoxLayout,
-    QHBoxLayout,
-    QGroupBox,
-    QLabel,
-    QLineEdit,
-    QListWidget,
-    QListWidgetItem,
-    QPushButton,
-    QWidget,
-    QButtonGroup,
-    QRadioButton,
-    QTabWidget,
-    QFileDialog,
-    QMessageBox,
-    QGraphicsDropShadowEffect,
-)
+    QAbstractItemView, QApplication, QButtonGroup, QCheckBox, QDesktopWidget,
+    QFileDialog, QGraphicsDropShadowEffect, QGridLayout, QGroupBox,
+    QHBoxLayout, QLabel, QLineEdit, QListView, QListWidget, QListWidgetItem,
+    QMessageBox, QPushButton, QRadioButton, QSizePolicy, QTabWidget,
+    QVBoxLayout, QWidget)
 
 import localization
 import Styles
 from Constants import clBlack, clBlue, clGreen, clRed, clViolet, playerColors
 from IPInfo import IPInfo
+from Models.DeckListModel import DeckListModel
+from Models.IPandESOListModel import (IPandESOFilterProxyModel,
+                                      IPandESOListModel)
+from Models.LobbyListModel import LobbyFilterProxyModel, LobbyListModel
+from Models.LogListModel import LogFilterProxyModel, LogListModel
+from Models.PlayerActionsListModel import (PlayerActionsListModel,
+                                           PlayerActionsProxyModel)
 from PingIP import pingIP
+from RecordParser import RecordGame
 from SniffThread import SniffThread
 from Speech import Speech
-from Models.LogListModel import LogListModel, LogFilterProxyModel
-from Models.IPandESOListModel import IPandESOListModel, IPandESOFilterProxyModel
-from Models.LobbyListModel import LobbyListModel, LobbyFilterProxyModel
-from RecordParser import RecordGame
-from Models.PlayerActionsListModel import (
-    PlayerActionsListModel,
-    PlayerActionsProxyModel,
-)
-from Models.DeckListModel import DeckListModel
 
 
 class MainWindow(QWidget):
@@ -118,7 +89,8 @@ class MainWindow(QWidget):
         self.oldPos = self.pos()
         self.mainWindow = QWidget(self)
         self.mainWindow.setObjectName("MainWindow")
-        self.mainWindow.setStyleSheet(Styles.stylesheet.format(path=self.getPath()))
+        self.mainWindow.setStyleSheet(
+            Styles.stylesheet.format(path=self.getPath()))
         grid = QGridLayout()
         self.mainWindow.setLayout(grid)
 
@@ -403,6 +375,7 @@ class MainWindow(QWidget):
         self.AddIP = QLineEdit()
         self.AddName = QLineEdit()
         self.AddButton = QPushButton()
+        self.AddButton.setEnabled(False)
         self.AddButton.setObjectName("Add")
         self.AddButton.setFixedSize(32, 32)
         self.AddButton.clicked.connect(self.AddManualIP)
@@ -445,17 +418,17 @@ class MainWindow(QWidget):
 
         SettingsLayout = QGridLayout()
 
-        settings = QSettings("XaKOps", "ESO Packet Tracker")
-        cs1 = settings.value("box1", True, type=bool)
-        cs2 = settings.value("box2", True, type=bool)
+        settings = QSettings("XaKOps", "ESO Tracker")
+        cs1 = settings.value("box1", False, type=bool)
+        cs2 = settings.value("box2", False, type=bool)
         cs3 = settings.value("box3", True, type=bool)
         cs4 = settings.value("box4", True, type=bool)
-        cs5 = settings.value("box5", True, type=bool)
+        cs5 = settings.value("box5", False, type=bool)
 
         cs6 = settings.value("box6", True, type=bool)
-        cs7 = settings.value("box7", True, type=bool)
-        cs8 = settings.value("box8", True, type=bool)
-        cs9 = settings.value("box9", True, type=bool)
+        cs7 = settings.value("box7", False, type=bool)
+        cs8 = settings.value("box8", False, type=bool)
+        cs9 = settings.value("box9", False, type=bool)
         self.ColorSetting = QWidget()
         ColorsLayout = QVBoxLayout()
 
@@ -605,7 +578,8 @@ class MainWindow(QWidget):
         self.GameActions.setLayout(GameActionsLayout)
 
         self.PlayerActions = QListView()
-        self.PlayerActions.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.PlayerActions.setVerticalScrollMode(
+            QAbstractItemView.ScrollPerPixel)
         self.PlayerActions.setFont(QFont("Consolas", 11, weight=QFont.Bold))
         GameActionsLayout.addWidget(self.PlayerActions, 0, 0, 1, 8)
 
@@ -766,13 +740,14 @@ class MainWindow(QWidget):
         if self.cb4.isChecked():
             FilterPattern["colors"].append(QColor(clGreen))
         if self.cb5.isChecked():
-            FilterPattern["colors"].append(QColor(clRed))        
+            FilterPattern["colors"].append(QColor(clRed))
         self.logs = QListView()
         self.logs.setFont(QFont("Consolas", 11, weight=QFont.Bold))
         self.logsModel = LogListModel(self.jsonPackets)
         self.logs.verticalScrollBar().valueChanged.connect(self.scrolled)
         self.logs.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
-        self.logsFilterModel = LogFilterProxyModel(FilterPattern, self.logsModel)
+        self.logsFilterModel = LogFilterProxyModel(
+            FilterPattern, self.logsModel)
         self.logs.setModel(self.logsFilterModel)
         ESOPacketsLogLayout.addWidget(self.logs, 1, 0, 1, 2)
 
@@ -840,7 +815,8 @@ class MainWindow(QWidget):
     def ActionsAfterIP(self, data):
         if data["Name"] == "":
             Item = next(
-                (item for item in self.IPinLobby if item["IP"] == data["IP"]), False
+                (item for item in self.IPinLobby if item["IP"]
+                 == data["IP"]), False
             )
             if Item != False:
                 Item["IPInfo"] = data
@@ -948,13 +924,23 @@ class MainWindow(QWidget):
     def scrolled(self, value):
         self.Scrolled = value == self.logs.verticalScrollBar().maximum()
 
+    def IsValidIP(self, IP):
+        try:
+            ipaddress.ip_address(IP)
+            return True
+        except:
+            return False
 
     def AddManualIP(self):
         if self.AddIP.text() != "" and self.AddName.text() != "":
-            self.AddNewItemToIPandNamesListBox({"IP": self.AddIP.text(), "ESO": self.AddName.text()})        
+            self.AddNewItemToIPandNamesListBox(
+                {"IP": self.AddIP.text(), "ESO": self.AddName.text()})
 
     def filterIPandNames(self):
-        self.IPandNamesFilterModel.setFilterPattern({"IP": self.AddIP.text(), "ESO": self.AddName.text()})       
+        self.AddButton.setEnabled(self.IsValidIP(
+            self.AddIP.text()) and self.AddName.text() != "")
+        self.IPandNamesFilterModel.setFilterPattern(
+            {"IP": self.AddIP.text(), "ESO": self.AddName.text()})
 
     def AddNewItemToPacketListBox(self, data):
         self.logsModel.insertRecord({"text": data[0], "color": data[1]})
@@ -970,7 +956,8 @@ class MainWindow(QWidget):
             False,
         )
         if Item == False:
-            self.IPandNamesModel.insertRecord({"IP": data["IP"], "ESO": data["ESO"]})
+            self.IPandNamesModel.insertRecord(
+                {"IP": data["IP"], "ESO": data["ESO"]})
             thread = IPInfo(ip=data["IP"], name=data["ESO"])
             thread.signals.infoSignal.connect(self.ActionsAfterIP)
             self.poolIPInfo.start(thread)
@@ -978,7 +965,8 @@ class MainWindow(QWidget):
 
     def UpdateIP(self, data):
         Item = next(
-            (item for item in self.IPinLobby if item["IP"] == data["IP"]), False
+            (item for item in self.IPinLobby if item["IP"]
+             == data["IP"]), False
         )
         if Item != False:
             Item["RTT"] = data["RTT"]
@@ -1001,7 +989,8 @@ class MainWindow(QWidget):
             self.poolSpeech.start(thread)
 
     def LaunchPing(self, data):
-        Item = next((item for item in self.IPinLobby if item["IP"] == data), False)
+        Item = next(
+            (item for item in self.IPinLobby if item["IP"] == data), False)
         if Item == False:
             self.lobbyModel.insertRecord(
                 {
@@ -1035,7 +1024,8 @@ class MainWindow(QWidget):
         with open("log.json", "w+", encoding="utf-8-sig") as f:
             json.dump(self.jsonPackets, f, ensure_ascii=False, sort_keys=True)
         with open("IPandNames.json", "w+", encoding="utf-8-sig") as f:
-            json.dump(self.jsonIPandNames, f, ensure_ascii=False, sort_keys=True)
+            json.dump(self.jsonIPandNames, f,
+                      ensure_ascii=False, sort_keys=True)
 
     # Открытие JSON из файла
     def openJSONPackets(self, Path):
@@ -1044,7 +1034,7 @@ class MainWindow(QWidget):
             data = data_file.read()
             if data:
                 j = json.loads(data)
-                return j
+                return j[:500]
             else:
                 return []
 
@@ -1155,7 +1145,8 @@ class MainWindow(QWidget):
 
     def DisplayRecordedGame(self, data):
         if not data["Game"] or not data["Players"]:
-            QMessageBox.warning(self, "ESO Tracker", self.loc["parsingwarning"])
+            QMessageBox.warning(self, "ESO Tracker",
+                                self.loc["parsingwarning"])
         else:
 
             totalRealPlayers = data["Game"]["numplayers"]
@@ -1178,22 +1169,26 @@ class MainWindow(QWidget):
                 self.exeVersion.setText(
                     self.loc["Version"]
                     + "Treaty Patch "
-                    + ".".join(list(data["Game"]["exe_version"].split(".")[-1]))
+                    + ".".join(list(data["Game"]
+                                    ["exe_version"].split(".")[-1]))
                 )
             elif data["Game"]["exe_name"] == "age3f.exe":
                 self.exeVersion.setText(
                     self.loc["Version"]
                     + "ESOC Patch "
-                    + ".".join(list(data["Game"]["exe_version"].split(".")[-1]))
+                    + ".".join(list(data["Game"]
+                                    ["exe_version"].split(".")[-1]))
                 )
             elif data["Game"]["exe_name"] == "age3y.exe":
-                self.exeVersion.setText(self.loc["Version"] + "The Asian Dynasties")
+                self.exeVersion.setText(
+                    self.loc["Version"] + "The Asian Dynasties")
             elif data["Game"]["exe_name"] == "age3.exe":
                 self.exeVersion.setText(self.loc["Version"] + "Vanilla")
             elif data["Game"]["exe_name"] == "age3x.exe":
                 self.exeVersion.setText(self.loc["Version"] + "The Warchiefs")
             else:
-                self.exeVersion.setText(self.loc["Version"] + self.loc["unknown"])
+                self.exeVersion.setText(
+                    self.loc["Version"] + self.loc["unknown"])
 
             self.Map.setText(data["Game"]["filename"])
 
@@ -1379,7 +1374,8 @@ class MainWindow(QWidget):
                         for deck in pDecks:
                             if deck["id"] == pInfo["selectedDeckId"]:
                                 decks.append(
-                                    {"pName": pInfo["name"], "dName": deck["name"]}
+                                    {"pName": pInfo["name"],
+                                        "dName": deck["name"]}
                                 )
                                 currentAge = -1
                                 for card in deck["cards"]:
@@ -1387,14 +1383,16 @@ class MainWindow(QWidget):
                                         if currentAge != int(card["age"]):
                                             currentAge = int(card["age"])
                                             decks.append(
-                                                {"aName": "Age " + str(currentAge + 1)}
+                                                {"aName": "Age " +
+                                                    str(currentAge + 1)}
                                             )
 
                                         decks.append(card)
                                 break
                     elif len(pDecks) > 0:
                         decks.append(
-                            {"pName": pInfo["name"], "dName": pDecks[0]["name"]}
+                            {"pName": pInfo["name"],
+                                "dName": pDecks[0]["name"]}
                         )
                         currentAge = -1
                         for card in pDecks[0]["cards"]:
@@ -1412,7 +1410,8 @@ class MainWindow(QWidget):
                         team1Score += pInfo["is_resigned"]
 
                     # print(len(pActions))
-                    apm = int(len(pActions) // (data["Game"]["duration"] / 1000 / 60))
+                    apm = int(len(pActions) //
+                              (data["Game"]["duration"] / 1000 / 60))
 
                     if pInfo["clan"]:
                         labelText = (
@@ -1495,7 +1494,6 @@ class MainWindow(QWidget):
                 self.Team2.setObjectName("TeamNone")
                 self.Team1.setObjectName("TeamNone")
 
-
             FilterPattern = {"colors": [], "actions": []}
             if self.player1Color.isChecked():
                 FilterPattern["colors"].append(playerColors[0])
@@ -1532,11 +1530,11 @@ class MainWindow(QWidget):
             if self.cbTrain.isChecked():
                 FilterPattern["actions"].append("train")
 
-
             self.DeckModel = DeckListModel(decks)
             self.Decks.setModel(self.DeckModel)
             self.Decks.setWordWrap(True)
-            self.PlayerActionsModel = PlayerActionsListModel(actions, data["Players"])
+            self.PlayerActionsModel = PlayerActionsListModel(
+                actions, data["Players"])
             self.PlayerActions.setWordWrap(True)
             self.PlayerActionsFilterModel = PlayerActionsProxyModel(
                 FilterPattern, self.PlayerActionsModel
