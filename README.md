@@ -1,3 +1,6 @@
+![ViewCount](https://views.whatilearened.today/views/github/VladTheJunior/ESO-Tracker.svg)
+[![GitHub stars](https://img.shields.io/github/stars/VladTheJunior/ESO-Tracker)](https://github.com/VladTheJunior/ESO-Tracker/stargazers)
+
 # ESO Tracker
 It is a utility for **TRACKING** network **PACKETS** (TCP and UDP), **IP CHECKING** and **PARSING RECORDS** in Age of Empires III. The scope is quite wide: you can troll your mates, catch annoying smurfs or cheaters and analyse games. Convinient filters show only the information you want to see. App supports both Russian and English localization. View list of all [features](#Features).
 
@@ -7,9 +10,6 @@ It is a utility for **TRACKING** network **PACKETS** (TCP and UDP), **IP CHECKIN
 
 
 If you don't trust installer then you can [compile .EXE file yourself](#How-To-Compile-.EXE-file-yourself). 
-
-
-[![HitCount](http://hits.dwyl.io/XaKOps/ESO-Tracker.svg)](http://hits.dwyl.io/XaKOps/ESO-Tracker)
 
 ## Screenshots
 ![Screenshot](Screenshots/1.PNG)
